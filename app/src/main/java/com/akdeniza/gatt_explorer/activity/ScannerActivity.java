@@ -1,6 +1,8 @@
 package com.akdeniza.gatt_explorer.activity;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -8,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +41,8 @@ public class ScannerActivity extends AppCompatActivity implements
     private BluetoothDeviceAdapter adapter;
     private DeviceListPresenter deviceListPresenter;
     private EmptyViewHandler emptyViewHandler;
+    private Dialog bluetoothDialog;
+    private Dialog locationDialog;
 
     @BindView(R.id.playPauseButton)
     FloatingActionButton playPauseButton;
@@ -86,6 +91,7 @@ public class ScannerActivity extends AppCompatActivity implements
         if (isScanningPossible() && scannerOnPlay) {
             gattExplorer.startScan();
         }
+        displayDialogsIfNeeded();
     }
 
     @Override
@@ -98,7 +104,7 @@ public class ScannerActivity extends AppCompatActivity implements
             gattExplorer.stopScan();
         }
         deviceListPresenter.onStop();
-
+        dismissDialogs();
     }
 
     @Override
@@ -113,18 +119,15 @@ public class ScannerActivity extends AppCompatActivity implements
                     //TODO: Remove this
                     //For testing purpose
                     deviceListPresenter.removeAllFromList();
-
                 }
             } else {
                 if (locationHelper.checkLocationPermission()) {
-                    scannerOnPlay = true;
-                    playPauseButton.setImageResource(android.R.drawable.ic_media_pause);
                     if (isScanningPossible()) {
+                        scannerOnPlay = true;
+                        playPauseButton.setImageResource(android.R.drawable.ic_media_pause);
                         gattExplorer.startScan();
                         deviceListPresenter.setUIUpdateState(true);
                     }
-
-
                 } else {
                     locationHelper.requestLocationPermission(view, this);
                 }
@@ -151,7 +154,7 @@ public class ScannerActivity extends AppCompatActivity implements
         }
     }
 
-    public boolean isScanningPossible() {
+    private boolean isScanningPossible() {
         return locationHelper.checkLocationPermission() && locationHelper.IsLocationTurnedOn()
                 && bluetoothHelper.isBluetoothEnabled();
     }
@@ -167,12 +170,16 @@ public class ScannerActivity extends AppCompatActivity implements
                 gattExplorer.startScan();
                 deviceListPresenter.setUIUpdateState(true);
             }
+            if (bluetoothDialog != null) {
+                bluetoothDialog.dismiss();
+            }
         } else {
             if (scannerOnPlay) {
                 gattExplorer.stopScan();
                 deviceListPresenter.setUIUpdateState(false);
             }
             deviceListPresenter.removeAllFromList();
+            displayDialogsIfNeeded();
         }
 
     }
@@ -181,6 +188,9 @@ public class ScannerActivity extends AppCompatActivity implements
     public void onLocationStatusChange(boolean isEnabled) {
         setEmptyView();
         if (isEnabled) {
+            if (locationDialog != null) {
+                locationDialog.dismiss();
+            }
             if (bluetoothHelper.isBluetoothEnabled() && locationHelper.checkLocationPermission() && scannerOnPlay) {
                 deviceListPresenter.onStart(adapter);
                 gattExplorer.startScan();
@@ -190,10 +200,11 @@ public class ScannerActivity extends AppCompatActivity implements
             gattExplorer.stopScan();
             deviceListPresenter.setUIUpdateState(false);
             deviceListPresenter.removeAllFromList();
+            displayDialogsIfNeeded();
         }
     }
 
-    public void setEmptyView() {
+    private void setEmptyView() {
         if (bluetoothHelper.isBluetoothEnabled()) {
             if (locationHelper.IsLocationTurnedOn()) {
                 if (scannerOnPlay) {
@@ -206,6 +217,75 @@ public class ScannerActivity extends AppCompatActivity implements
             }
         } else {
             emptyViewHandler.setEmptyViewState(EmptyViewHandler.TEXT_BLUETOOTH_DISABLED);
+        }
+    }
+
+    private void bluetoothEnableDialog() {
+        bluetoothDialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.bluetooth_dialog_message)
+                .setPositiveButton(R.string.bluetooth_dialog_positive, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        bluetoothHelper.enableBluetooth();
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_negative, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        finish();
+                    }
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    private void locationEnableDialog() {
+        locationDialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.location_dialog_message)
+                .setPositiveButton(R.string.location_dialog_positive, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        locationHelper.openLocationEnableSetting(ScannerActivity.this);
+                    }
+                })
+                .setNegativeButton(R.string.dialog_negative, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        finish();
+                    }
+                })
+                .setCancelable(false)
+                .show();
+
+    }
+
+    private void displayDialogsIfNeeded() {
+        if (bluetoothHelper.isBluetoothEnabled()) {
+            if (locationHelper.IsLocationTurnedOn()) {
+
+            } else {
+                locationEnableDialog();
+            }
+        } else {
+            if (locationHelper.IsLocationTurnedOn()) {
+                bluetoothEnableDialog();
+            } else {
+                locationEnableDialog();
+                bluetoothEnableDialog();
+            }
+        }
+    }
+
+    public void dismissDialogs() {
+        if (bluetoothDialog != null) {
+            bluetoothDialog.dismiss();
+        }
+        if (locationDialog != null) {
+            locationDialog.dismiss();
         }
     }
 }

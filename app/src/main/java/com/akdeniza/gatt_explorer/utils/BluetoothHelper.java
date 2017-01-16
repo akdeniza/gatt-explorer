@@ -75,7 +75,6 @@ public class BluetoothHelper {
     }
 
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
-
     {
 
         @Override

@@ -15,4 +15,14 @@
     <string name="emptyview_location_off">Location is off</string>
     <string name="emptyview_scanner_pause">Scanner is on pause</string>
 
+    <string name="bluetooth_dialog_message">Bluetooth needs to be enabled to scan for devices.</string>
+    <string name="bluetooth_dialog_positive">Enable</string>
+
+    <string name="location_dialog_title">Location service needed</string>
+    <string name="location_dialog_message">In order to scan for bluetooth devices from Android 6.0 on location permission is required. </string>
+    <string name="location_dialog_positive">Settings</string>
+
+    <string name="dialog_negative">Exit</string>
+
+
 </resources>
