@@ -8,12 +8,12 @@ import java.util.Scanner;
  * Created by Akdeniz on 04/01/2017.
  */
 
-public class GATTExplorer {
+public class GattExplorer {
 
     private Scanner scanner;
     private Context context;
 
-    public GATTExplorer(Context context) {
+    public GattExplorer(Context context) {
         this.context = context;
     }
 

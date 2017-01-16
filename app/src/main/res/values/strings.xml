@@ -4,4 +4,10 @@
     <string name="path_play">M16,24L38,24L27.3,30.8L16,38ZM16,10L27.3,17.2L38,24L16,24Z</string>
     <string name="path_pause">M12,10L20,10L20,38L12,38ZM28,10L36,10L36,38L28,38Z</string>
 
+ <string name="location_request_message">In order to scan for bluetooth devices from Android 6.0 on location permission is required.</string>
+    <string name="locaton_request_title">Location permission required</string>
+
+    <string name="location_snackbar_settings">Settings</string>
+    <string name="location_snackbar_message">Access denied. Please grant access.</string>
+
 </resources>
