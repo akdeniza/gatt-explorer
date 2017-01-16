@@ -19,6 +19,7 @@ public class GattExplorer {
     }
 
     public void onStart() {
+        scanner = ScannerFactory.getScanner();
 
     }
 

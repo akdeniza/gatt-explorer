@@ -19,21 +19,21 @@ import static android.bluetooth.le.ScanSettings.SCAN_MODE_BALANCED;
 public class ScannerV21 implements Scanner {
 
     private static final String EXCEPTION_LOG_TAG = "ScannerV21";
-    private BluetoothAdapter bluetoothAdapter;
+    private BluetoothAdapter adapter;
     private BluetoothLeScanner bluetoothLeScanner;
     private ScanListener listener;
     private ScanSettings scanSettings;
 
     public ScannerV21() {
-        this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        this.bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+        this.adapter = BluetoothAdapter.getDefaultAdapter();
+        this.bluetoothLeScanner = adapter.getBluetoothLeScanner();
         scanSettings = new ScanSettings.Builder().setScanMode(SCAN_MODE_BALANCED).build();
     }
 
     @Override
     public void startScan() throws NullPointerException {
         try {
-        bluetoothLeScanner.startScan(null, scanSettings, scanCallback);
+            bluetoothLeScanner.startScan(null, scanSettings, scanCallback);
         } catch (NullPointerException e) {
             Log.e(EXCEPTION_LOG_TAG, e.toString());
         }
@@ -42,7 +42,7 @@ public class ScannerV21 implements Scanner {
     @Override
     public void stopScan() {
         try {
-        bluetoothLeScanner.stopScan(scanCallback);
+            bluetoothLeScanner.stopScan(scanCallback);
         } catch (NullPointerException e) {
             Log.e(EXCEPTION_LOG_TAG, e.toString());
         }

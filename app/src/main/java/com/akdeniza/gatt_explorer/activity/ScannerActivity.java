@@ -28,7 +28,7 @@ import static com.akdeniza.gatt_explorer.utils.LocationHelper.PERMISSION_LOCATIO
 import static com.akdeniza.gatt_explorer.utils.LocationHelper.SHARED_PREF_NEVERASK;
 
 public class ScannerActivity extends AppCompatActivity implements
-        FloatingActionButton.OnClickListener {
+        FloatingActionButton.OnClickListener, BluetoothHelper.Listener, LocationHelper.Listener {
 
     private GattExplorer gattExplorer;
     private BluetoothHelper bluetoothHelper;
@@ -70,7 +70,8 @@ public class ScannerActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-
+        bluetoothHelper.addListener(this);
+        locationHelper.addListener(this);
         gattExplorer.setScanResultListener(deviceListPresenter);
         deviceListPresenter.onStart(adapter);
 
@@ -82,6 +83,8 @@ public class ScannerActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         super.onStop();
+        bluetoothHelper.removeListener(this);
+        locationHelper.removeListener(this);
         if (bluetoothHelper.isBluetoothEnabled()) {
             gattExplorer.stopScan();
         }
@@ -131,7 +134,6 @@ public class ScannerActivity extends AppCompatActivity implements
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                     preferences.edit().putBoolean(SHARED_PREF_NEVERASK, true).commit();
                 }
-
             }
 
             if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
@@ -141,8 +143,42 @@ public class ScannerActivity extends AppCompatActivity implements
     }
 
     public boolean isScanningPossible() {
-        return locationHelper.checkLocationPermission() && locationHelper.checkIsLocationTurnedOn()
+        return locationHelper.checkLocationPermission() && locationHelper.IsLocationTurnedOn()
                 && bluetoothHelper.isBluetoothEnabled();
     }
 
+    @Override
+    public void onBluetoothStatusChange(boolean isEnabled) {
+        if (isEnabled) {
+            gattExplorer.onStart();
+            deviceListPresenter.onStart(adapter);
+            gattExplorer.setScanResultListener(deviceListPresenter);
+            if (locationHelper.IsLocationTurnedOn() && locationHelper.IsLocationTurnedOn() && scannerOnPlay) {
+                gattExplorer.startScan();
+                deviceListPresenter.setUIUpdateState(true);
+            }
+        } else {
+            if (scannerOnPlay) {
+                gattExplorer.stopScan();
+                deviceListPresenter.setUIUpdateState(false);
+            }
+            deviceListPresenter.removeAllFromList();
+        }
+
+    }
+
+    @Override
+    public void onLocationStatusChange(boolean isEnabled) {
+        if (isEnabled) {
+            if (bluetoothHelper.isBluetoothEnabled() && locationHelper.checkLocationPermission() && scannerOnPlay) {
+                deviceListPresenter.onStart(adapter);
+                gattExplorer.startScan();
+                deviceListPresenter.setUIUpdateState(true);
+            }
+        } else {
+            gattExplorer.stopScan();
+            deviceListPresenter.setUIUpdateState(false);
+            deviceListPresenter.removeAllFromList();
+        }
+    }
 }

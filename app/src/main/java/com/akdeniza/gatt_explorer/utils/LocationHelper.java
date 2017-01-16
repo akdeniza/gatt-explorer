@@ -3,9 +3,11 @@ package com.akdeniza.gatt_explorer.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -21,6 +23,10 @@ import android.view.View;
 
 import com.akdeniza.gatt_explorer.gatt_explorer.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.location.LocationManager.MODE_CHANGED_ACTION;
 import static android.provider.Settings.Secure.LOCATION_MODE;
 import static android.provider.Settings.Secure.LOCATION_MODE_OFF;
 
@@ -31,13 +37,17 @@ import static android.provider.Settings.Secure.LOCATION_MODE_OFF;
 public class LocationHelper {
 
     private static final boolean LOCATION_NEEDED = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    private static final IntentFilter STATE_CHANGED = new IntentFilter(MODE_CHANGED_ACTION);
     private static final String EXCEPTION_LOG_TAG = "LocationHelper";
-    public static final String SHARED_PREF_NEVERASK = "never ask";
+    public static final String SHARED_PREF_NEVERASK = "neverAsk";
     public static final int PERMISSION_LOCATION_REQUEST_CODE = 1;
     private Context context;
+    private List<Listener> listeners;
+    private boolean isLocationEnabled;
 
     public LocationHelper(Context context) {
         this.context = context;
+        listeners = new ArrayList<>(LOCATION_NEEDED ? 3 : 0);
     }
 
     public boolean checkLocationPermission() {
@@ -51,7 +61,7 @@ public class LocationHelper {
         return LOCATION_NEEDED;
     }
 
-    public boolean checkIsLocationTurnedOn() {
+    public boolean IsLocationTurnedOn() {
         if (LOCATION_NEEDED) {
             try {
                 return Settings.Secure.getInt(context.getContentResolver(), LOCATION_MODE) != LOCATION_MODE_OFF;
@@ -139,6 +149,56 @@ public class LocationHelper {
                     }
                 });
         snackbar.show();
+    }
+
+    public void addListener(Listener listener) {
+        if (!LOCATION_NEEDED) {
+            return;
+        }
+
+        if (listeners.size() == 0) {
+            isLocationEnabled = IsLocationTurnedOn();
+            context.registerReceiver(broadcastReceiver, STATE_CHANGED);
+        }
+
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
+
+    public void removeListener(Listener listener) {
+        if (!LOCATION_NEEDED) {
+            return;
+        }
+
+        listeners.remove(listener);
+
+        if (listeners.size() == 0) {
+            context.unregisterReceiver(broadcastReceiver);
+        }
+
+    }
+
+    private void checkLocationStateAndNotifyListeners() {
+        boolean value = IsLocationTurnedOn();
+        if (value != isLocationEnabled) {
+            isLocationEnabled = value;
+            for (int i = 0, size = listeners.size(); i < size; i++) {
+                listeners.get(i).onLocationStatusChange(isLocationEnabled);
+            }
+        }
+
+    }
+
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            checkLocationStateAndNotifyListeners();
+        }
+    };
+
+    public interface Listener {
+        void onLocationStatusChange(boolean isEnabled);
     }
 
 }
