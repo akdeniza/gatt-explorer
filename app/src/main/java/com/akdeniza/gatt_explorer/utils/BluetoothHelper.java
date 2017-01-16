@@ -36,7 +36,7 @@ public class BluetoothHelper {
     }
 
     public void enableBluetooth() {
-        if (adapter.isEnabled()) {
+        if (!adapter.isEnabled()) {
             adapter.enable();
         }
     }
@@ -74,8 +74,7 @@ public class BluetoothHelper {
         }
     }
 
-    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
-    {
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
