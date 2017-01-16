@@ -34,4 +34,8 @@ dependencies {
     //Butterknife
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
+    //Lombok
+    provided "org.projectlombok:lombok:1.12.6"
+    provided 'org.glassfish:javax.annotation:10.0-b28'
 }

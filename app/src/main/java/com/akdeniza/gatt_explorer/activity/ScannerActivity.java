@@ -9,13 +9,18 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.akdeniza.gatt_explorer.adapter.BluetoothDeviceAdapter;
 import com.akdeniza.gatt_explorer.gatt_explorer.R;
 import com.akdeniza.gatt_explorer.gatt_explorer_lib.GattExplorer;
+import com.akdeniza.gatt_explorer.presenter.DeviceListPresenter;
 import com.akdeniza.gatt_explorer.utils.BluetoothHelper;
 import com.akdeniza.gatt_explorer.utils.LocationHelper;
+import com.akdeniza.gatt_explorer.utils.RecyclerViewLine;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,9 +35,14 @@ public class ScannerActivity extends AppCompatActivity implements
     private BluetoothHelper bluetoothHelper;
     private LocationHelper locationHelper;
     private boolean scannerOnPlay = false;
+    private BluetoothDeviceAdapter adapter;
+    private DeviceListPresenter deviceListPresenter;
 
     @BindView(R.id.playPauseButton)
     FloatingActionButton playPauseButton;
+
+    @BindView(R.id.deviceRecycler)
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +54,29 @@ public class ScannerActivity extends AppCompatActivity implements
         locationHelper = new LocationHelper(this);
         bluetoothHelper = new BluetoothHelper(this);
         playPauseButton.setOnClickListener(this);
+
+
+        deviceListPresenter = new DeviceListPresenter();
+
+        //Recyclerview and Adapter
+        adapter = new BluetoothDeviceAdapter();
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new RecyclerViewLine(this, R.drawable.divider));
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
+        gattExplorer.setScanResultListener(deviceListPresenter);
+        deviceListPresenter.onStart(adapter);
+
         if (isScanningPossible() && scannerOnPlay) {
-            //Todo: Set listener
-            //gattExplorer.startScan();
+            gattExplorer.startScan();
         }
     }
 
@@ -62,6 +86,7 @@ public class ScannerActivity extends AppCompatActivity implements
         if (bluetoothHelper.isBluetoothEnabled()) {
             gattExplorer.stopScan();
         }
+        deviceListPresenter.onStop();
 
     }
 
@@ -73,15 +98,19 @@ public class ScannerActivity extends AppCompatActivity implements
                 scannerOnPlay = false;
                 playPauseButton.setImageResource(android.R.drawable.ic_media_play);
                 if (bluetoothHelper.isBluetoothEnabled()) {
-                    gattExplorer.stopScan();
+                    deviceListPresenter.setUIUpdateState(false);
+                    //TODO: Remove this
+                    //For testing purpose
+                    deviceListPresenter.removeAllFromList();
+
                 }
             } else {
                 if (locationHelper.checkLocationPermission()) {
                     scannerOnPlay = true;
                     playPauseButton.setImageResource(android.R.drawable.ic_media_pause);
                     if (isScanningPossible()) {
-                        //Todo: Set listener
-                        //gattExplorer.startScan();
+                        gattExplorer.startScan();
+                        deviceListPresenter.setUIUpdateState(true);
                     }
 
 
