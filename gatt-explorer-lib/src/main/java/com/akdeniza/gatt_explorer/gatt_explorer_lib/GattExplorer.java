@@ -1,8 +1,9 @@
 package com.akdeniza.gatt_explorer.gatt_explorer_lib;
 
-import android.content.Context;
+import com.akdeniza.gatt_explorer.gatt_explorer_lib.scanner.ScanListener;
+import com.akdeniza.gatt_explorer.gatt_explorer_lib.scanner.Scanner;
+import com.akdeniza.gatt_explorer.gatt_explorer_lib.scanner.ScannerFactory;
 
-import java.util.Scanner;
 
 /**
  * Created by Akdeniz on 04/01/2017.
@@ -11,10 +12,10 @@ import java.util.Scanner;
 public class GattExplorer {
 
     private Scanner scanner;
-    private Context context;
 
-    public GattExplorer(Context context) {
-        this.context = context;
+
+    public GattExplorer() {
+        scanner = ScannerFactory.getScanner();
     }
 
     public void onStart() {
@@ -26,15 +27,15 @@ public class GattExplorer {
     }
 
     public void startScan() {
-
+        scanner.startScan();
     }
 
     public void stopScan() {
-
+        scanner.stopScan();
     }
 
-    public void setScanResultListener() {
-
+    public void setScanResultListener(ScanListener listener) {
+        scanner.setScanListener(listener);
     }
 
     //region "explorer part"

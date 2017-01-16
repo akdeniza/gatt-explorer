@@ -1,0 +1,69 @@
+package com.akdeniza.gatt_explorer.gatt_explorer_lib.scanner;
+
+import android.annotation.TargetApi;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
+import android.os.Build;
+import android.util.Log;
+
+import static android.bluetooth.le.ScanSettings.SCAN_MODE_BALANCED;
+
+/**
+ * Created by Akdeniz on 05/01/2017.
+ */
+
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+public class ScannerV21 implements Scanner {
+
+    private static final String EXCEPTION_LOG_TAG = "ScannerV21";
+    private BluetoothAdapter bluetoothAdapter;
+    private BluetoothLeScanner bluetoothLeScanner;
+    private ScanListener listener;
+    private ScanSettings scanSettings;
+
+    public ScannerV21() {
+        this.bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        this.bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+        scanSettings = new ScanSettings.Builder().setScanMode(SCAN_MODE_BALANCED).build();
+    }
+
+    @Override
+    public void startScan() throws NullPointerException {
+        try {
+        bluetoothLeScanner.startScan(null, scanSettings, scanCallback);
+        } catch (NullPointerException e) {
+            Log.e(EXCEPTION_LOG_TAG, e.toString());
+        }
+    }
+
+    @Override
+    public void stopScan() {
+        try {
+        bluetoothLeScanner.stopScan(scanCallback);
+        } catch (NullPointerException e) {
+            Log.e(EXCEPTION_LOG_TAG, e.toString());
+        }
+    }
+
+    @Override
+    public void setScanListener(ScanListener listener) {
+        this.listener = listener;
+
+    }
+
+    private final ScanCallback scanCallback = new ScanCallback() {
+        @Override
+        public void onScanResult(int callbackType, ScanResult result) {
+            super.onScanResult(callbackType, result);
+            try {
+                listener.onData(result.getDevice(), result.getRssi(), result.getScanRecord().getBytes());
+            } catch (NullPointerException e) {
+                Log.e(EXCEPTION_LOG_TAG, e.toString());
+            }
+
+        }
+    };
+}

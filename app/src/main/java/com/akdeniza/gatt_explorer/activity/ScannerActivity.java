@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.akdeniza.gatt_explorer.gatt_explorer.R;
 import com.akdeniza.gatt_explorer.gatt_explorer_lib.GattExplorer;
+import com.akdeniza.gatt_explorer.utils.BluetoothHelper;
 import com.akdeniza.gatt_explorer.utils.LocationHelper;
 
 import butterknife.BindView;
@@ -26,6 +27,7 @@ public class ScannerActivity extends AppCompatActivity implements
         FloatingActionButton.OnClickListener {
 
     private GattExplorer gattExplorer;
+    private BluetoothHelper bluetoothHelper;
     private LocationHelper locationHelper;
     private boolean scannerOnPlay = false;
 
@@ -38,21 +40,29 @@ public class ScannerActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_scanner);
         ButterKnife.bind(this);
 
+        gattExplorer = new GattExplorer();
         locationHelper = new LocationHelper(this);
+        bluetoothHelper = new BluetoothHelper(this);
         playPauseButton.setOnClickListener(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-//        gattExplorer.onStart();
 
+        if (isScanningPossible() && scannerOnPlay) {
+            //Todo: Set listener
+            //gattExplorer.startScan();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-//        gattExplorer.onStop();
+        if (bluetoothHelper.isBluetoothEnabled()) {
+            gattExplorer.stopScan();
+        }
+
     }
 
     @Override
@@ -62,12 +72,18 @@ public class ScannerActivity extends AppCompatActivity implements
 
                 scannerOnPlay = false;
                 playPauseButton.setImageResource(android.R.drawable.ic_media_play);
-//                gattExplorer.stopScan();
+                if (bluetoothHelper.isBluetoothEnabled()) {
+                    gattExplorer.stopScan();
+                }
             } else {
                 if (locationHelper.checkLocationPermission()) {
                     scannerOnPlay = true;
                     playPauseButton.setImageResource(android.R.drawable.ic_media_pause);
-//                gattExplorer.startScan();
+                    if (isScanningPossible()) {
+                        //Todo: Set listener
+                        //gattExplorer.startScan();
+                    }
+
 
                 } else {
                     locationHelper.requestLocationPermission(view, this);
@@ -98,4 +114,10 @@ public class ScannerActivity extends AppCompatActivity implements
             }
         }
     }
+
+    public boolean isScanningPossible() {
+        return locationHelper.checkLocationPermission() && locationHelper.checkIsLocationTurnedOn()
+                && bluetoothHelper.isBluetoothEnabled();
+    }
+
 }
