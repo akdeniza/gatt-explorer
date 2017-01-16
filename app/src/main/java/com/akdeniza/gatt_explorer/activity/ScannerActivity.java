@@ -11,7 +11,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.akdeniza.gatt_explorer.adapter.BluetoothDeviceAdapter;
@@ -135,11 +134,8 @@ public class ScannerActivity extends AppCompatActivity implements
 
             }
 
-
             if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                //locationHelper.showPermissionDeniedSnackbar(findViewById(R.id.activity_scanner), this);
-                Log.d("z1", "onRequestPermission");
-
+                locationHelper.showPermissionDeniedSnackbar(findViewById(R.id.activity_scanner), this);
             }
         }
     }
