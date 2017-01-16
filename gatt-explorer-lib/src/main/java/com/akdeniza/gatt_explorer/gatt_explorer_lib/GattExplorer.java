@@ -42,6 +42,10 @@ public class GATTExplorer {
 
     }
 
+    public void disconnectFromDevice() {
+
+    }
+
     public void checkIfJsonIsAvailable() {
 
     }
