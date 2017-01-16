@@ -2,6 +2,7 @@ package com.akdeniza.gatt_explorer.activity;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,7 +15,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 
 import com.akdeniza.gatt_explorer.adapter.BluetoothDeviceAdapter;
 import com.akdeniza.gatt_explorer.gatt_explorer.R;
@@ -77,6 +80,7 @@ public class ScannerActivity extends AppCompatActivity implements
         recyclerView.setAdapter(adapter);
 
         emptyViewHandler = new EmptyViewHandler(recyclerView, emptyView);
+
     }
 
     @Override
@@ -280,6 +284,7 @@ public class ScannerActivity extends AppCompatActivity implements
         }
     }
 
+
     public void dismissDialogs() {
         if (bluetoothDialog != null) {
             bluetoothDialog.dismiss();
@@ -288,4 +293,6 @@ public class ScannerActivity extends AppCompatActivity implements
             locationDialog.dismiss();
         }
     }
+
+
 }
