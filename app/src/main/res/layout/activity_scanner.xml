@@ -17,11 +17,41 @@
         android:src="@android:drawable/ic_media_play"
         />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/deviceRecycler"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"/>
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/emptyRecyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_launcher"/>
+
+            <TextView
+                android:id="@+id/textEmptyView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingTop="8dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/deviceRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"/>
+    </FrameLayout>
 
 
 </RelativeLayout>

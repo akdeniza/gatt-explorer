@@ -16,6 +16,7 @@ import android.view.View;
 import com.akdeniza.gatt_explorer.adapter.BluetoothDeviceAdapter;
 import com.akdeniza.gatt_explorer.gatt_explorer.R;
 import com.akdeniza.gatt_explorer.gatt_explorer_lib.GattExplorer;
+import com.akdeniza.gatt_explorer.handler.EmptyViewHandler;
 import com.akdeniza.gatt_explorer.presenter.DeviceListPresenter;
 import com.akdeniza.gatt_explorer.utils.BluetoothHelper;
 import com.akdeniza.gatt_explorer.utils.LocationHelper;
@@ -36,12 +37,16 @@ public class ScannerActivity extends AppCompatActivity implements
     private boolean scannerOnPlay = false;
     private BluetoothDeviceAdapter adapter;
     private DeviceListPresenter deviceListPresenter;
+    private EmptyViewHandler emptyViewHandler;
 
     @BindView(R.id.playPauseButton)
     FloatingActionButton playPauseButton;
 
     @BindView(R.id.deviceRecycler)
     RecyclerView recyclerView;
+
+    @BindView(R.id.emptyRecyclerView)
+    View emptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,8 @@ public class ScannerActivity extends AppCompatActivity implements
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new RecyclerViewLine(this, R.drawable.divider));
         recyclerView.setAdapter(adapter);
+
+        emptyViewHandler = new EmptyViewHandler(recyclerView, emptyView);
     }
 
     @Override
@@ -72,9 +79,10 @@ public class ScannerActivity extends AppCompatActivity implements
         super.onStart();
         bluetoothHelper.addListener(this);
         locationHelper.addListener(this);
+        setEmptyView();
         gattExplorer.setScanResultListener(deviceListPresenter);
         deviceListPresenter.onStart(adapter);
-
+        adapter.registerAdapterDataObserver(emptyViewHandler);
         if (isScanningPossible() && scannerOnPlay) {
             gattExplorer.startScan();
         }
@@ -85,6 +93,7 @@ public class ScannerActivity extends AppCompatActivity implements
         super.onStop();
         bluetoothHelper.removeListener(this);
         locationHelper.removeListener(this);
+        adapter.unregisterAdapterDataObserver(emptyViewHandler);
         if (bluetoothHelper.isBluetoothEnabled()) {
             gattExplorer.stopScan();
         }
@@ -149,6 +158,7 @@ public class ScannerActivity extends AppCompatActivity implements
 
     @Override
     public void onBluetoothStatusChange(boolean isEnabled) {
+        setEmptyView();
         if (isEnabled) {
             gattExplorer.onStart();
             deviceListPresenter.onStart(adapter);
@@ -169,6 +179,7 @@ public class ScannerActivity extends AppCompatActivity implements
 
     @Override
     public void onLocationStatusChange(boolean isEnabled) {
+        setEmptyView();
         if (isEnabled) {
             if (bluetoothHelper.isBluetoothEnabled() && locationHelper.checkLocationPermission() && scannerOnPlay) {
                 deviceListPresenter.onStart(adapter);
@@ -179,6 +190,22 @@ public class ScannerActivity extends AppCompatActivity implements
             gattExplorer.stopScan();
             deviceListPresenter.setUIUpdateState(false);
             deviceListPresenter.removeAllFromList();
+        }
+    }
+
+    public void setEmptyView() {
+        if (bluetoothHelper.isBluetoothEnabled()) {
+            if (locationHelper.IsLocationTurnedOn()) {
+                if (scannerOnPlay) {
+                    emptyViewHandler.setEmptyViewState(EmptyViewHandler.TEXT_NO_BLDEVICE);
+                } else {
+                    emptyViewHandler.setEmptyViewState(EmptyViewHandler.TEXT_SCANNER_PAUSE);
+                }
+            } else {
+                emptyViewHandler.setEmptyViewState(EmptyViewHandler.TEXT_LOCATION_DISABLED);
+            }
+        } else {
+            emptyViewHandler.setEmptyViewState(EmptyViewHandler.TEXT_BLUETOOTH_DISABLED);
         }
     }
 }
