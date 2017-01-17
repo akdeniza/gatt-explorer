@@ -38,4 +38,7 @@ dependencies {
     //Lombok
     provided "org.projectlombok:lombok:1.12.6"
     provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    //Logger
+    compile 'com.orhanobut:logger:1.15'
 }
