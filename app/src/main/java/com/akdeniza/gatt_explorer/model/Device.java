@@ -1,6 +1,10 @@
 package com.akdeniza.gatt_explorer.model;
 
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +19,7 @@ public class Device implements Comparable {
     @Getter @Setter private int rssi;
     @Getter private BluetoothDevice bluetoothDevice;
     @Getter @Setter private long lastUpdate;
+    List<BluetoothGattService> services = new ArrayList<>();
 
     public Device(String address, BluetoothDevice bluetoothDevice, int rssi) {
         this.address = address;
@@ -22,6 +27,8 @@ public class Device implements Comparable {
         this.rssi = rssi;
         this.lastUpdate = System.currentTimeMillis();
     }
+
+
 
     @Override
     public int compareTo(Object o) {
