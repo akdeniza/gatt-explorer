@@ -1,1 +1,1 @@
-include ':app', ':gatt-explorer-lib'
+include ':app', ':gatt.explorer.lib'
