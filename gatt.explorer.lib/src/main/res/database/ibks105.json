@@ -1,0 +1,171 @@
+{
+    "gatthash": "asdasdasd",
+    "services": [{
+            "uuid": "0x1800",
+            "name": "Generic Access",
+            "characteristics": [{
+                    "uuid": "0x2A00",
+                    "name": "Device Name",
+                    "length": "",
+                    "format": "0x19",
+                    "access": "r"
+
+                },
+                {
+                    "uuid": "0x2A01",
+                    "name": "Appearance",
+                    "length": "",
+                    "format": "0x19",
+                    "access": "r"
+
+                },
+                {
+                    "uuid": "0x2A04",
+                    "name": "Peripheral preffered connection",
+                    "length": "",
+                    "format": "0x06",
+                    "access": "r"
+
+                }
+            ]
+
+        },
+        {
+
+            "uuid": "0x180A",
+            "name": "Device Information",
+            "characteristics": [{
+                    "uuid": "0x2A29",
+                    "name": "Manufacturer Name String",
+                    "length": "",
+                    "format": "0x19",
+                    "access": "r"
+
+                },
+                {
+                    "uuid": "0x2A25",
+                    "name": "Serial Number String",
+                    "length": "",
+                    "format": "0x19",
+                    "access": "r"
+
+                },
+                {
+                    "uuid": "0x2A27",
+                    "name": "Hradware Revision String",
+                    "length": "",
+                    "format": "0x19",
+                    "access": "r"
+
+                },
+                {
+                    "uuid": "0x2A28",
+                    "name": "Software Revision String",
+                    "length": "",
+                    "format": "0x19",
+                    "access": "r"
+
+                }
+            ]
+
+        },
+        {
+
+            "uuid": "0xFFF0",
+            "name": "Beacon Service",
+            "characteristics": [{
+                    "uuid": "0xFFF1",
+                    "name": "UUID",
+                    "length": "16",
+                    "format": "",
+                    "access": "rw"
+
+                },
+                {
+
+                    "uuid": "0xFFF1",
+                    "name": "UUID",
+                    "length": "16",
+                    "format": "",
+                    "access": "rw"
+
+                },
+                {
+
+                    "uuid": "0xFFF2",
+                    "name": "Major",
+                    "length": "2",
+                    "format": "",
+                    "access": "rw"
+
+                },
+                {
+
+                    "uuid": "0xFFF3",
+                    "name": "Minor",
+                    "length": "2",
+                    "format": "",
+                    "access": "rw"
+
+                },
+                {
+
+                    "uuid": "0xFFF4",
+                    "name": "CPwr",
+                    "length": "1",
+                    "format": "",
+                    "access": "rw"
+
+                },
+                {
+
+                    "uuid": "0xFFF5",
+                    "name": "Adv. Interval",
+                    "length": "2",
+                    "format": "",
+                    "access": "rw"
+
+                },
+                {
+
+                    "uuid": "0xFFF6",
+                    "name": "Tx Power",
+                    "length": "1",
+                    "format": "",
+                    "access": "rw"
+
+                },
+                {
+
+                    "uuid": "0xFFF7",
+                    "name": "Password",
+                    "length": "2",
+                    "format": "",
+                    "access": "rw"
+
+                },
+                {
+
+                    "uuid": "0xFFF8",
+                    "name": "Config byte",
+                    "length": "1",
+                    "format": "",
+                    "access": "rw"
+
+                },
+                {
+                    "uuid": "0xFFF9",
+                    "name": "State byte",
+                    "length": "1",
+                    "format": "",
+                    "access": "r"
+
+                }
+
+            ]
+
+        }
+    ]
+
+
+}
