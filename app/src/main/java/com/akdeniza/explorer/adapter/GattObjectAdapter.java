@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.akdeniza.gatt_explorer.gatt_explorer.R;
+import com.akdeniza.gatt_explorer.lib.gatt.GattListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
  * Created by Akdeniz on 17/01/2017.
  */
 
-public class GattObjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class GattObjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements GattListener {
 
     private static final int CASE_SERVICE = 0;
     private static final int CASE_CHARACTERISTIC = 1;
@@ -97,6 +98,11 @@ public class GattObjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public long getItemId(int position) {
         return gattObjectList.get(position).hashCode();
+    }
+
+    @Override
+    public void onData(List<Object> gattObjects) {
+        setGattAdapterObjectList(gattObjects);
     }
 
     public class ServiceHolder extends RecyclerView.ViewHolder {

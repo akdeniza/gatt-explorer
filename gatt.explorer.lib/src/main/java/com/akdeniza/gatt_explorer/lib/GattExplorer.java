@@ -1,5 +1,11 @@
 package com.akdeniza.gatt_explorer.lib;
 
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
+import android.content.Context;
+
+import com.akdeniza.gatt_explorer.lib.gatt.BtGattCallbackHandler;
+import com.akdeniza.gatt_explorer.lib.gatt.GattListener;
 import com.akdeniza.gatt_explorer.lib.scanner.ScanListener;
 import com.akdeniza.gatt_explorer.lib.scanner.Scanner;
 import com.akdeniza.gatt_explorer.lib.scanner.ScannerFactory;
@@ -12,10 +18,12 @@ import com.akdeniza.gatt_explorer.lib.scanner.ScannerFactory;
 public class GattExplorer {
 
     private Scanner scanner;
+    private Context context;
 
 
-    public GattExplorer() {
-        scanner = ScannerFactory.getScanner();
+    public GattExplorer(Context context) {
+        this.context = context.getApplicationContext();
+        this.scanner = ScannerFactory.getScanner();
     }
 
     public void onStart() {
@@ -40,6 +48,12 @@ public class GattExplorer {
     }
 
     //region "explorer part"
+
+    public void discoverGatt(BluetoothDevice device, GattListener gattListener) {
+        BtGattCallbackHandler bluetoothGattCallback = new BtGattCallbackHandler(gattListener);
+        BluetoothGatt bluetoothGatt = device.connectGatt(context, false, bluetoothGattCallback);
+    }
+
     public void connectToDevice() {
 
     }

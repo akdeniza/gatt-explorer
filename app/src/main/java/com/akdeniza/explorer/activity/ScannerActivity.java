@@ -56,7 +56,7 @@ public class ScannerActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_scanner);
         ButterKnife.bind(this);
 
-        gattExplorer = new GattExplorer();
+        gattExplorer = new GattExplorer(this);
         locationHelper = new LocationHelper(this);
         bluetoothHelper = new BluetoothHelper(this);
         playPauseButton.setOnClickListener(this);
