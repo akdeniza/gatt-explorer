@@ -50,7 +50,7 @@ public class GattExplorer {
     //region "explorer part"
 
     public void discoverGatt(BluetoothDevice device, GattListener gattListener) {
-        BtGattCallbackHandler bluetoothGattCallback = new BtGattCallbackHandler(gattListener);
+        BtGattCallbackHandler bluetoothGattCallback = new BtGattCallbackHandler(gattListener, context);
         BluetoothGatt bluetoothGatt = device.connectGatt(context, false, bluetoothGattCallback);
     }
 

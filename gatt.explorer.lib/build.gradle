@@ -32,5 +32,12 @@ dependencies {
     //Logger
     compile 'com.orhanobut:logger:1.15'
 
+    //REST
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+
+    //GSON
+    compile 'com.google.code.gson:gson:2.8.0'
+
 
 }

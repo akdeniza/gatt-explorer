@@ -1,10 +1,10 @@
 {
     "gatthash": "asdasdasd",
     "services": [{
-            "uuid": "0x1800",
+            "uuid": "00001800-0000-1000-8000-00805f9b34fb",
             "name": "Generic Access",
             "characteristics": [{
-                    "uuid": "0x2A00",
+                    "uuid": "00002a00-0000-1000-8000-00805f9b34fb",
                     "name": "Device Name",
                     "length": "",
                     "format": "0x19",

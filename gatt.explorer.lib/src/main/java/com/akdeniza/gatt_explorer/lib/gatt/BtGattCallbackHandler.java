@@ -5,11 +5,22 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
+import android.content.Context;
 
+import com.akdeniza.gatt_explorer.lib.REST.GitHubClient;
+import com.akdeniza.gatt_explorer.lib.REST.GitHubInterface;
+import com.akdeniza.gatt_explorer.lib.model.GitHubRepose;
+import com.akdeniza.gatt_explorer.lib.util.ConnectionHelper;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
 
 /**
  * Created by Akdeniz on 14/02/2017.
@@ -22,10 +33,14 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
     private GattListener gattListener;
     private List<BluetoothGattCharacteristic> characteristics;
     private BluetoothGatt bluetoothGatt;
+    private String serviceAndCharacteristicUiids = "";
+    private Context context;
+    private GitHubRepose gattProfile;
 
 
-    public BtGattCallbackHandler(GattListener gattListener) {
+    public BtGattCallbackHandler(GattListener gattListener, Context context) {
         this.gattListener = gattListener;
+        this.context = context.getApplicationContext();
     }
 
     public void setGattListener(GattListener listener) {
@@ -52,18 +67,29 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
     public void onServicesDiscovered(BluetoothGatt gatt, int status) {
         super.onServicesDiscovered(gatt, status);
 
-        List<BluetoothGattService> services = gatt.getServices();
+        if (status == GATT_SUCCESS) {
 
-        for (BluetoothGattService service : services) {
-            gattObjects.add(service);
-            characteristics = service.getCharacteristics();
-            for (BluetoothGattCharacteristic characteristic : characteristics) {
-                gattObjects.add(characteristic);
+            List<BluetoothGattService> services = gatt.getServices();
+
+            for (BluetoothGattService service : services) {
+                gattObjects.add(service);
+                characteristics = service.getCharacteristics();
+                serviceAndCharacteristicUiids = serviceAndCharacteristicUiids + service.getUuid().toString();
+                for (BluetoothGattCharacteristic characteristic : characteristics) {
+                    gattObjects.add(characteristic);
+
+                    serviceAndCharacteristicUiids = serviceAndCharacteristicUiids + characteristic.getUuid().toString();
+                }
+                Logger.d("GATT Service: " + service.getUuid());
             }
-        }
 
-        //adapter.setGattAdapterObjectList(gattObjects);
-        requestCharatericsValues();
+            Logger.d("Hash uuid: " + serviceAndCharacteristicUiids.hashCode());
+
+            requestCharatericsValues();
+            requestGATTFromDatabase("1433830153");
+        } else {
+            //TODO: Show error
+        }
 
     }
 
@@ -112,5 +138,31 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
 
         }
 
+    }
+
+    private void requestGATTFromDatabase(String hash) {
+        ConnectionHelper connectionHelper = new ConnectionHelper();
+        if (connectionHelper.isConnectedToInternet(context)) {
+            GitHubInterface api = GitHubClient.getGitHubClient().create(GitHubInterface.class);
+
+            Call<GitHubRepose> call = api.getGATTJsonFromHash(hash);
+            call.enqueue(new Callback<GitHubRepose>() {
+                @Override
+                public void onResponse(Call<GitHubRepose> call, Response<GitHubRepose> response) {
+                    gattProfile = response.body().
+                    Logger.d("Api Respone: " + response.body().getGattHash());
+                    Logger.d("Api Respone: " + response.body().getServices().toString());
+
+                }
+
+                @Override
+                public void onFailure(Call<GitHubRepose> call, Throwable t) {
+                    Logger.d("Api callback failed");
+                }
+            });
+
+        } else {
+            //TODO: Toast: No connection, showing raw data
+        }
     }
 }
