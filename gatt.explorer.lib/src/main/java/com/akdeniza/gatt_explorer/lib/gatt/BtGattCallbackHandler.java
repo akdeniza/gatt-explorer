@@ -1,5 +1,6 @@
 package com.akdeniza.gatt_explorer.lib.gatt;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -35,14 +36,21 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
     private BluetoothGatt bluetoothGatt;
     private String serviceAndCharacteristicUiids = "";
     private Context context;
-    private GitHubRepose gattProfile;
 
 
+    /**
+     * @param gattListener
+     * @param context
+     */
     public BtGattCallbackHandler(GattListener gattListener, Context context) {
         this.gattListener = gattListener;
         this.context = context.getApplicationContext();
     }
 
+    /**
+     *
+     * @param listener
+     */
     public void setGattListener(GattListener listener) {
         this.gattListener = listener;
 
@@ -59,6 +67,7 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
             gatt.discoverServices();
         } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
             Logger.d("Disonnected from GATT server");
+
         }
     }
 
@@ -85,7 +94,6 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
 
             Logger.d("Hash uuid: " + serviceAndCharacteristicUiids.hashCode());
 
-            requestCharatericsValues();
             requestGATTFromDatabase("1433830153");
         } else {
             //TODO: Show error
@@ -103,13 +111,13 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
     public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic
             btCharacter, int status) {
         super.onCharacteristicRead(gatt, btCharacter, status);
+        btCharacter.getPermissions();
         if (gattObjects.get(counter - 1) instanceof BluetoothGattCharacteristic) {
             BluetoothGattCharacteristic bluetoothCharacteristic = (BluetoothGattCharacteristic) gattObjects.get(counter - 1);
             if (btCharacter.getUuid().equals(bluetoothCharacteristic.getUuid())) {
                 ((BluetoothGattCharacteristic) gattObjects.get(counter - 1)).setValue(btCharacter.getValue());
             }
         }
-        Logger.d("onCharacteristicRead, Status: " + status);
         requestCharatericsValues();
 
     }
@@ -119,12 +127,10 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
             counter++;
             if (gattObjects.get(counter - 1) instanceof BluetoothGattCharacteristic) {
                 BluetoothGattCharacteristic bluetoothGattCharacteristic = (BluetoothGattCharacteristic) gattObjects.get(counter - 1);
-                bluetoothGattCharacteristic.getPermissions();
-                bluetoothGattCharacteristic.getWriteType();
-                //TODO: Use access value from JSON
-                if ((counter - 1) != 17) {
+
+                if(bluetoothGattCharacteristic.getProperties() == 2 || bluetoothGattCharacteristic.getProperties() == 10){
                     bluetoothGatt.readCharacteristic(bluetoothGattCharacteristic);
-                } else {
+                }else{
                     requestCharatericsValues();
                 }
 
@@ -149,15 +155,25 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
             call.enqueue(new Callback<GitHubRepose>() {
                 @Override
                 public void onResponse(Call<GitHubRepose> call, Response<GitHubRepose> response) {
-                    gattProfile = response.body().
-                    Logger.d("Api Respone: " + response.body().getGattHash());
-                    Logger.d("Api Respone: " + response.body().getServices().toString());
+                    Logger.d("Api request successful");
+
+//                    List<Service> services = response.body().getServices();
+//                    for (Service service : services) {
+//                        List<Characteristic> characteristics = service.getCharacteristics();
+//                        gattObjects.add(service);
+//                        for (Characteristic characteristic : characteristics) {
+//                            gattObjects.add(characteristic);
+//                        }
+//                    }
+
+                    requestCharatericsValues();
 
                 }
 
                 @Override
                 public void onFailure(Call<GitHubRepose> call, Throwable t) {
-                    Logger.d("Api callback failed");
+                    Logger.d("Api request failed: " + t.toString());
+                    ((Activity) context).finish();
                 }
             });
 

@@ -28,7 +28,7 @@ public class Service {
         return name;
     }
 
-    private List<Characteristic> getCharacteristics() {
+    public List<Characteristic> getCharacteristics() {
         return characteristics;
     }
 
