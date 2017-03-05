@@ -92,9 +92,7 @@ public class BtGattHandler extends BluetoothGattCallback {
                 Logger.d("GATT Service: " + service.getUuid());
             }
 
-            Logger.d("Hash uuid: " + serviceAndCharacteristicUiids.hashCode());
-
-            requestGATTFromDatabase("1433830153");
+            requestGATTFromDatabase("" +serviceAndCharacteristicUiids.hashCode());
         } else {
             //TODO: Show error
         }
