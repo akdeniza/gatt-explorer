@@ -27,7 +27,7 @@ import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
  * Created by Akdeniz on 14/02/2017.
  */
 
-public class BtGattCallbackHandler extends BluetoothGattCallback {
+public class BtGattHandler extends BluetoothGattCallback {
 
     private int counter = 0;
     private List<Object> gattObjects = new ArrayList<>();
@@ -42,7 +42,7 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
      * @param gattListener
      * @param context
      */
-    public BtGattCallbackHandler(GattListener gattListener, Context context) {
+    public BtGattHandler(GattListener gattListener, Context context) {
         this.gattListener = gattListener;
         this.context = context.getApplicationContext();
     }
@@ -118,11 +118,11 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
                 ((BluetoothGattCharacteristic) gattObjects.get(counter - 1)).setValue(btCharacter.getValue());
             }
         }
-        requestCharatericsValues();
+        requestCharateristicsValues();
 
     }
 
-    private void requestCharatericsValues() {
+    private void requestCharateristicsValues() {
         if (counter < gattObjects.size()) {
             counter++;
 
@@ -136,11 +136,11 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
                 if(bluetoothGattCharacteristic.getProperties() == 2 || bluetoothGattCharacteristic.getProperties() == 10){
                     bluetoothGatt.readCharacteristic(bluetoothGattCharacteristic);
                 }else{
-                    requestCharatericsValues();
+                    requestCharateristicsValues();
                 }
 
             } else {
-                requestCharatericsValues();
+                requestCharateristicsValues();
             }
 
         } else {
@@ -171,7 +171,7 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
 //                        }
 //                    }
 
-                    requestCharatericsValues();
+                    requestCharateristicsValues();
 
                 }
 

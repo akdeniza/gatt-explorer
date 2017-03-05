@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Akdeniz on 02/03/2017.
  */
 
-public class GitHubRepose {
+public class GitHubReponse {
 
     @SerializedName("gatthash")
     private String gatthash;
