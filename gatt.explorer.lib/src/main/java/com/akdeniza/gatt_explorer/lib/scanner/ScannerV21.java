@@ -12,8 +12,10 @@ import android.util.Log;
 import static android.bluetooth.le.ScanSettings.SCAN_MODE_BALANCED;
 
 /**
- * Created by Akdeniz on 05/01/2017.
+ * Bluetooth scanner class for devices above API 21
+ * @author Akdeniz on 05/01/2017.
  */
+
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class ScannerV21 implements Scanner {
@@ -30,6 +32,10 @@ public class ScannerV21 implements Scanner {
         scanSettings = new ScanSettings.Builder().setScanMode(SCAN_MODE_BALANCED).build();
     }
 
+    /**
+     * Starts Bluetooth LE scan
+     * @throws NullPointerException when bluetooth is disabled
+     */
     @Override
     public void startScan() throws NullPointerException {
         try {
@@ -39,6 +45,9 @@ public class ScannerV21 implements Scanner {
         }
     }
 
+    /**
+     * Stops ongoing Bluetooth LE scans
+     */
     @Override
     public void stopScan() {
         try {
@@ -48,6 +57,10 @@ public class ScannerV21 implements Scanner {
         }
     }
 
+    /**
+     * Sets the scan result listener
+     * @param listener that should receive scan results
+     */
     @Override
     public void setScanListener(ScanListener listener) {
         this.listener = listener;

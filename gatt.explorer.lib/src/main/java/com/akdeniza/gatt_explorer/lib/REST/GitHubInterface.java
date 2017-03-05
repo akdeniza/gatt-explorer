@@ -1,6 +1,6 @@
 package com.akdeniza.gatt_explorer.lib.REST;
 
-import com.akdeniza.gatt_explorer.lib.model.GitHubRepose;
+import com.akdeniza.gatt_explorer.lib.model.GitHubReponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -13,7 +13,7 @@ import retrofit2.http.Path;
 public interface GitHubInterface {
 
     @GET("/akdeniza/gatt-explorer-database/master/data/{hash}.json")
-    Call<GitHubRepose> getGATTJsonFromHash(
+    Call<GitHubReponse> getGATTJsonFromHash(
             @Path("hash") String hash
     );
 

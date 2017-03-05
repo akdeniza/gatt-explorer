@@ -10,7 +10,7 @@ import android.content.Context;
 
 import com.akdeniza.gatt_explorer.lib.REST.GitHubClient;
 import com.akdeniza.gatt_explorer.lib.REST.GitHubInterface;
-import com.akdeniza.gatt_explorer.lib.model.GitHubRepose;
+import com.akdeniza.gatt_explorer.lib.model.GitHubReponse;
 import com.akdeniza.gatt_explorer.lib.util.ConnectionHelper;
 import com.orhanobut.logger.Logger;
 
@@ -125,9 +125,14 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
     private void requestCharatericsValues() {
         if (counter < gattObjects.size()) {
             counter++;
+
+            //Making sure to read only characteristics and skipping the services in the object list
             if (gattObjects.get(counter - 1) instanceof BluetoothGattCharacteristic) {
                 BluetoothGattCharacteristic bluetoothGattCharacteristic = (BluetoothGattCharacteristic) gattObjects.get(counter - 1);
 
+                Logger.d("Format of charactestic: " + bluetoothGattCharacteristic.getStringValue(0));
+
+                //Only read if the characteristic is readable otherwise skip the characteristic
                 if(bluetoothGattCharacteristic.getProperties() == 2 || bluetoothGattCharacteristic.getProperties() == 10){
                     bluetoothGatt.readCharacteristic(bluetoothGattCharacteristic);
                 }else{
@@ -151,10 +156,10 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
         if (connectionHelper.isConnectedToInternet(context)) {
             GitHubInterface api = GitHubClient.getGitHubClient().create(GitHubInterface.class);
 
-            Call<GitHubRepose> call = api.getGATTJsonFromHash(hash);
-            call.enqueue(new Callback<GitHubRepose>() {
+            Call<GitHubReponse> call = api.getGATTJsonFromHash(hash);
+            call.enqueue(new Callback<GitHubReponse>() {
                 @Override
-                public void onResponse(Call<GitHubRepose> call, Response<GitHubRepose> response) {
+                public void onResponse(Call<GitHubReponse> call, Response<GitHubReponse> response) {
                     Logger.d("Api request successful");
 
 //                    List<Service> services = response.body().getServices();
@@ -171,7 +176,7 @@ public class BtGattCallbackHandler extends BluetoothGattCallback {
                 }
 
                 @Override
-                public void onFailure(Call<GitHubRepose> call, Throwable t) {
+                public void onFailure(Call<GitHubReponse> call, Throwable t) {
                     Logger.d("Api request failed: " + t.toString());
                     ((Activity) context).finish();
                 }

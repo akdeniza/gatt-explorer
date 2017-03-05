@@ -6,7 +6,8 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 /**
- * Created by Akdeniz on 05/01/2017.
+ * Bluetooth scanner class for devices until API 21
+ * @author Akdeniz on 05/01/2017.
  */
 
 public class ScannerV0 implements Scanner, BluetoothAdapter.LeScanCallback {
@@ -20,11 +21,17 @@ public class ScannerV0 implements Scanner, BluetoothAdapter.LeScanCallback {
         this.adapter = BluetoothAdapter.getDefaultAdapter();
     }
 
+    /**
+     * Starts Bluetooth LE scan
+     */
     @Override
     public void startScan() {
         adapter.startLeScan(this);
     }
 
+    /**
+     * Stops ongoing Bluetooth LE scan
+     */
     @Override
     public void stopScan() {
         adapter.stopLeScan(this);
@@ -35,6 +42,12 @@ public class ScannerV0 implements Scanner, BluetoothAdapter.LeScanCallback {
         this.listener = listener;
     }
 
+    /**
+     * Callback reporting scan results to the ScanListener
+     * @param bluetoothDevice that was found
+     * @param i rssi value
+     * @param bytes advertisment record
+     */
     @Override
     public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
         try {

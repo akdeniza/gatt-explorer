@@ -3,7 +3,8 @@ package com.akdeniza.gatt_explorer.lib.scanner;
 import android.os.Build;
 
 /**
- * Created by Akdeniz on 05/01/2017.
+ * ScannerFactory for generating a Bluetooth LE scanner depending on the api of the device
+ * @autor Akdeniz on 05/01/2017.
  */
 
 public class ScannerFactory {
