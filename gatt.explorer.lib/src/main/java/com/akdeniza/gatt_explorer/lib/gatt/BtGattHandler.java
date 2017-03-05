@@ -1,6 +1,5 @@
 package com.akdeniza.gatt_explorer.lib.gatt;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -10,7 +9,9 @@ import android.content.Context;
 
 import com.akdeniza.gatt_explorer.lib.REST.GitHubClient;
 import com.akdeniza.gatt_explorer.lib.REST.GitHubInterface;
+import com.akdeniza.gatt_explorer.lib.model.Characteristic;
 import com.akdeniza.gatt_explorer.lib.model.GitHubReponse;
+import com.akdeniza.gatt_explorer.lib.model.Service;
 import com.akdeniza.gatt_explorer.lib.util.ConnectionHelper;
 import com.orhanobut.logger.Logger;
 
@@ -31,6 +32,7 @@ public class BtGattHandler extends BluetoothGattCallback {
 
     private int counter = 0;
     private List<Object> gattObjects = new ArrayList<>();
+    private List<Object> databaseReponse = new ArrayList<>();
     private GattListener gattListener;
     private List<BluetoothGattCharacteristic> characteristics;
     private BluetoothGatt bluetoothGatt;
@@ -48,7 +50,6 @@ public class BtGattHandler extends BluetoothGattCallback {
     }
 
     /**
-     *
      * @param listener
      */
     public void setGattListener(GattListener listener) {
@@ -92,7 +93,7 @@ public class BtGattHandler extends BluetoothGattCallback {
                 Logger.d("GATT Service: " + service.getUuid());
             }
 
-            requestGATTFromDatabase("" +serviceAndCharacteristicUiids.hashCode());
+            requestGATTFromDatabase("" + serviceAndCharacteristicUiids.hashCode());
         } else {
             //TODO: Show error
         }
@@ -110,10 +111,16 @@ public class BtGattHandler extends BluetoothGattCallback {
             btCharacter, int status) {
         super.onCharacteristicRead(gatt, btCharacter, status);
         btCharacter.getPermissions();
+
+        //Skip any other object than BluetoothGattCharacteristic
         if (gattObjects.get(counter - 1) instanceof BluetoothGattCharacteristic) {
             BluetoothGattCharacteristic bluetoothCharacteristic = (BluetoothGattCharacteristic) gattObjects.get(counter - 1);
             if (btCharacter.getUuid().equals(bluetoothCharacteristic.getUuid())) {
                 ((BluetoothGattCharacteristic) gattObjects.get(counter - 1)).setValue(btCharacter.getValue());
+                if (!databaseReponse.isEmpty()) {
+                    ((Characteristic) databaseReponse.get(counter - 1)).setValue(btCharacter.getValue());
+                }
+
             }
         }
         requestCharateristicsValues();
@@ -124,16 +131,16 @@ public class BtGattHandler extends BluetoothGattCallback {
         if (counter < gattObjects.size()) {
             counter++;
 
-            //Making sure to read only characteristics and skipping the services in the object list
+            //Making sure to read only characteristics and skip the services in the object list
             if (gattObjects.get(counter - 1) instanceof BluetoothGattCharacteristic) {
                 BluetoothGattCharacteristic bluetoothGattCharacteristic = (BluetoothGattCharacteristic) gattObjects.get(counter - 1);
 
                 Logger.d("Format of charactestic: " + bluetoothGattCharacteristic.getStringValue(0));
 
                 //Only read if the characteristic is readable otherwise skip the characteristic
-                if(bluetoothGattCharacteristic.getProperties() == 2 || bluetoothGattCharacteristic.getProperties() == 10){
+                if (bluetoothGattCharacteristic.getProperties() == 2 || bluetoothGattCharacteristic.getProperties() == 10) {
                     bluetoothGatt.readCharacteristic(bluetoothGattCharacteristic);
-                }else{
+                } else {
                     requestCharateristicsValues();
                 }
 
@@ -143,8 +150,13 @@ public class BtGattHandler extends BluetoothGattCallback {
 
         } else {
             bluetoothGatt.disconnect();
-            gattListener.onData(gattObjects);
 
+            //If no data from the database was obtainable then pass the raw data
+            if (databaseReponse.isEmpty()) {
+                gattListener.onData(fromGattObjectToLibraryModel(gattObjects));
+            } else {
+                gattListener.onData(databaseReponse);
+            }
         }
 
     }
@@ -160,14 +172,18 @@ public class BtGattHandler extends BluetoothGattCallback {
                 public void onResponse(Call<GitHubReponse> call, Response<GitHubReponse> response) {
                     Logger.d("Api request successful");
 
-//                    List<Service> services = response.body().getServices();
-//                    for (Service service : services) {
-//                        List<Characteristic> characteristics = service.getCharacteristics();
-//                        gattObjects.add(service);
-//                        for (Characteristic characteristic : characteristics) {
-//                            gattObjects.add(characteristic);
-//                        }
-//                    }
+                    //if the requested data exists use the data to fll the databaseResponse
+                    if (response.body() != null) {
+
+                        List<Service> services = response.body().getServices();
+                        for (Service service : services) {
+                            List<Characteristic> characteristics = service.getCharacteristics();
+                            databaseReponse.add(service);
+                            for (Characteristic characteristic : characteristics) {
+                                databaseReponse.add(characteristic);
+                            }
+                        }
+                    }
 
                     requestCharateristicsValues();
 
@@ -176,12 +192,38 @@ public class BtGattHandler extends BluetoothGattCallback {
                 @Override
                 public void onFailure(Call<GitHubReponse> call, Throwable t) {
                     Logger.d("Api request failed: " + t.toString());
-                    ((Activity) context).finish();
+                    requestCharateristicsValues();
                 }
             });
 
         } else {
             //TODO: Toast: No connection, showing raw data
+        }
+    }
+
+    /**
+     * Parses all the objects of the class BluetoothGattService and BluetoothGattCharacteristic
+     * to com.akdeniza.gatt_explorer.lib.model.Service and com.akdeniza.gatt_explorer.lib.model.Characteristic
+     *
+     * @param gattObjects the list that should be parsed
+     * @return returns the list with objects from the classes service and characteristic
+     */
+    private List<Object> fromGattObjectToLibraryModel(List<Object> gattObjects) {
+        if (gattObjects.get(0) instanceof BluetoothGattService) {
+            List<Object> newList = new ArrayList<>();
+            for (int i = 0; i < gattObjects.size(); i++) {
+                Object o = gattObjects.get(i);
+                if (gattObjects.get(i) instanceof BluetoothGattService) {
+
+                    newList.add(new Service((BluetoothGattService) gattObjects.get(i)));
+
+                } else if (gattObjects.get(i) instanceof BluetoothGattCharacteristic) {
+                    newList.add(new Characteristic((BluetoothGattCharacteristic) gattObjects.get(i)));
+                }
+            }
+            return newList;
+        } else {
+            return gattObjects;
         }
     }
 }

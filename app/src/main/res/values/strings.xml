@@ -24,5 +24,7 @@
 
     <string name="dialog_negative">Exit</string>
 
+    <string name="unknown_name">Unknown Name</string>
+
 
 </resources>

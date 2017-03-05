@@ -1,7 +1,5 @@
 package com.akdeniza.explorer.adapter;
 
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattService;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +10,8 @@ import android.widget.TextView;
 
 import com.akdeniza.gatt_explorer.gatt_explorer.R;
 import com.akdeniza.gatt_explorer.lib.gatt.GattListener;
+import com.akdeniza.gatt_explorer.lib.model.Characteristic;
+import com.akdeniza.gatt_explorer.lib.model.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,6 @@ public class GattObjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         });
 
-
     }
 
     @Override
@@ -67,11 +66,11 @@ public class GattObjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case CASE_SERVICE:
-                ((ServiceHolder) holder).bindService((BluetoothGattService) gattObjectList.get(position));
+                ((ServiceHolder) holder).bindService((Service) gattObjectList.get(position));
                 break;
 
             case CASE_CHARACTERISTIC:
-                ((CharacteristicHolder) holder).bindCharacteristic((BluetoothGattCharacteristic) gattObjectList.get(position));
+                ((CharacteristicHolder) holder).bindCharacteristic((Characteristic) gattObjectList.get(position));
                 break;
 
             default:
@@ -81,9 +80,9 @@ public class GattObjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if (gattObjectList.get(position) instanceof BluetoothGattService) {
+        if (gattObjectList.get(position) instanceof Service) {
             return CASE_SERVICE;
-        } else if (gattObjectList.get(position) instanceof BluetoothGattCharacteristic) {
+        } else if (gattObjectList.get(position) instanceof Characteristic) {
             return CASE_CHARACTERISTIC;
         }
 
@@ -108,37 +107,40 @@ public class GattObjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public class ServiceHolder extends RecyclerView.ViewHolder {
 
         private TextView serviceUuid;
-        private TextView serviceValue;
+        private TextView serviceName;
 
         public ServiceHolder(View itemView) {
             super(itemView);
 
             serviceUuid = (TextView) itemView.findViewById(R.id.serviceUiidTextView);
-            serviceValue = (TextView) itemView.findViewById(R.id.serviceValueTextView);
+            serviceName = (TextView) itemView.findViewById(R.id.serviceNameTextView);
         }
 
-        public void bindService(BluetoothGattService bluetoothGattService) {
-            serviceUuid.setText(bluetoothGattService.getUuid().toString());
-            serviceValue.setText("Value1");
+        public void bindService(Service service) {
+            serviceUuid.setText(service.getUuuid().toString());
+            serviceName.setText(service.getName() != null ? service.getName() : "Uknown Name");
         }
     }
 
     public class CharacteristicHolder extends RecyclerView.ViewHolder {
 
         private TextView characteristicUiid;
+        private TextView characteristicName;
         private TextView characteristicValue;
 
         public CharacteristicHolder(View itemView) {
             super(itemView);
             characteristicUiid = (TextView) itemView.findViewById(R.id.characteristicUiidTextView);
+            characteristicName = (TextView) itemView.findViewById(R.id.characteristicNameTextView);
             characteristicValue = (TextView) itemView.findViewById(R.id.characteristicValueTextView);
 
         }
 
-        public void bindCharacteristic(BluetoothGattCharacteristic bluetoothGattCharacteristic) {
-            characteristicUiid.setText(bluetoothGattCharacteristic.getUuid().toString());
-            if (bluetoothGattCharacteristic.getValue() != null) {
-                characteristicValue.setText(bluetoothGattCharacteristic.getValue().toString());
+        public void bindCharacteristic(Characteristic characteristic) {
+            characteristicUiid.setText(characteristic.getUuuid().toString());
+            characteristicName.setText(characteristic.getName() != null ? characteristic.getName() : "Uknown Name");
+            if (characteristic.getValue() != null) {
+                characteristicValue.setText(characteristic.getValue().toString());
             } else {
                 characteristicValue.setText("Value2");
             }

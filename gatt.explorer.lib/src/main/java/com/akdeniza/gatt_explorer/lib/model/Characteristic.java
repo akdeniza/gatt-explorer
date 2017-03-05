@@ -1,6 +1,10 @@
 package com.akdeniza.gatt_explorer.lib.model;
 
+import android.bluetooth.BluetoothGattCharacteristic;
+
 import com.google.gson.annotations.SerializedName;
+
+import java.util.UUID;
 
 /**
  * Created by Akdeniz on 02/03/2017.
@@ -9,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
 public class Characteristic {
 
     @SerializedName("uuid")
-    private String uuuid;
+    private UUID uuuid;
 
     @SerializedName("name")
     private String name;
@@ -20,8 +24,18 @@ public class Characteristic {
     @SerializedName("access")
     private String access;
 
+    private byte[] value;
 
-    public String getUuuid() {
+    public Characteristic(BluetoothGattCharacteristic characteristic) {
+        this.uuuid = characteristic.getUuid();
+        this.name = null;
+        this.format = null;
+        this.access = null;
+        this.value = characteristic.getValue();
+
+    }
+
+    public UUID getUuuid() {
         return uuuid;
     }
 
@@ -37,6 +51,14 @@ public class Characteristic {
         return access;
     }
 
+    public byte[] getValue() {
+        return value;
+    }
+
+    public void setValue(byte[] value) {
+        this.value = value;
+    }
+
     @Override
     public String toString() {
         return "Characteristic{" +
@@ -44,6 +66,7 @@ public class Characteristic {
                 ", name='" + name + '\'' +
                 ", format='" + format + '\'' +
                 ", access='" + access + '\'' +
+                ", value='" + value + '\'' +
                 '}';
     }
 }
