@@ -12,6 +12,7 @@ import com.akdeniza.gatt_explorer.lib.REST.GitHubInterface;
 import com.akdeniza.gatt_explorer.lib.model.Characteristic;
 import com.akdeniza.gatt_explorer.lib.model.GitHubReponse;
 import com.akdeniza.gatt_explorer.lib.model.Service;
+import com.akdeniza.gatt_explorer.lib.parser.CharacteristicParserHandler;
 import com.akdeniza.gatt_explorer.lib.util.ConnectionHelper;
 import com.orhanobut.logger.Logger;
 
@@ -93,6 +94,7 @@ public class BtGattHandler extends BluetoothGattCallback {
                 Logger.d("GATT Service: " + service.getUuid());
             }
 
+            Logger.d("Hash: " + serviceAndCharacteristicUiids.hashCode() + " from: " + serviceAndCharacteristicUiids);
             requestGATTFromDatabase("" + serviceAndCharacteristicUiids.hashCode());
         } else {
             //TODO: Show error
@@ -118,9 +120,8 @@ public class BtGattHandler extends BluetoothGattCallback {
             if (btCharacter.getUuid().equals(bluetoothCharacteristic.getUuid())) {
                 ((BluetoothGattCharacteristic) gattObjects.get(counter - 1)).setValue(btCharacter.getValue());
                 if (!databaseReponse.isEmpty()) {
-                    ((Characteristic) databaseReponse.get(counter - 1)).setValue(btCharacter.getValue());
+                    ((Characteristic) databaseReponse.get(counter - 1)).setValueInByte(btCharacter.getValue());
                 }
-
             }
         }
         requestCharateristicsValues();
@@ -135,8 +136,6 @@ public class BtGattHandler extends BluetoothGattCallback {
             if (gattObjects.get(counter - 1) instanceof BluetoothGattCharacteristic) {
                 BluetoothGattCharacteristic bluetoothGattCharacteristic = (BluetoothGattCharacteristic) gattObjects.get(counter - 1);
 
-                Logger.d("Format of charactestic: " + bluetoothGattCharacteristic.getStringValue(0));
-
                 //Only read if the characteristic is readable otherwise skip the characteristic
                 if (bluetoothGattCharacteristic.getProperties() == 2 || bluetoothGattCharacteristic.getProperties() == 10) {
                     bluetoothGatt.readCharacteristic(bluetoothGattCharacteristic);
@@ -149,14 +148,7 @@ public class BtGattHandler extends BluetoothGattCallback {
             }
 
         } else {
-            bluetoothGatt.disconnect();
-
-            //If no data from the database was obtainable then pass the raw data
-            if (databaseReponse.isEmpty()) {
-                gattListener.onData(fromGattObjectToLibraryModel(gattObjects));
-            } else {
-                gattListener.onData(databaseReponse);
-            }
+            parseCharacteristicIfNeededInfoIsAvailable();
         }
 
     }
@@ -225,5 +217,21 @@ public class BtGattHandler extends BluetoothGattCallback {
         } else {
             return gattObjects;
         }
+    }
+
+    private void parseCharacteristicIfNeededInfoIsAvailable() {
+
+        CharacteristicParserHandler characteristicParserHandler = new CharacteristicParserHandler();
+
+        bluetoothGatt.disconnect();
+
+        //If no data from the database was obtainable then pass the raw data
+        if (databaseReponse.isEmpty()) {
+            gattListener.onData(fromGattObjectToLibraryModel(gattObjects));
+        } else {
+            databaseReponse = characteristicParserHandler.parseAllCharacteristics(databaseReponse);
+            gattListener.onData(databaseReponse);
+        }
+
     }
 }

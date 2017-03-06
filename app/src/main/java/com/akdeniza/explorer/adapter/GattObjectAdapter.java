@@ -118,7 +118,7 @@ public class GattObjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public void bindService(Service service) {
             serviceUuid.setText(service.getUuuid().toString());
-            serviceName.setText(service.getName() != null ? service.getName() : "Uknown Name");
+            serviceName.setText(service.getName() != null ? service.getName() : "Unknown Name");
         }
     }
 
@@ -138,11 +138,13 @@ public class GattObjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public void bindCharacteristic(Characteristic characteristic) {
             characteristicUiid.setText(characteristic.getUuuid().toString());
-            characteristicName.setText(characteristic.getName() != null ? characteristic.getName() : "Uknown Name");
+            characteristicName.setText(characteristic.getName() != null ? characteristic.getName() : "Unknown Name");
             if (characteristic.getValue() != null) {
-                characteristicValue.setText(characteristic.getValue().toString());
+                characteristicValue.setText(characteristic.getValue());
+            } else if (characteristic.getValueInByte() != null) {
+                characteristicValue.setText(characteristic.getValueInByte().toString());
             } else {
-                characteristicValue.setText("Value2");
+                characteristicValue.setText("NOT READABLE");
             }
 
         }
