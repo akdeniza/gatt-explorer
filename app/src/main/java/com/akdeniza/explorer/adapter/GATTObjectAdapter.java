@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.akdeniza.gatt_explorer.gatt_explorer.R;
-import com.akdeniza.gatt_explorer.lib.gatt.GattListener;
+import com.akdeniza.gatt_explorer.lib.gatt.GATTListener;
 import com.akdeniza.gatt_explorer.lib.model.Characteristic;
 import com.akdeniza.gatt_explorer.lib.model.Service;
 
@@ -20,13 +20,13 @@ import java.util.List;
  * Created by Akdeniz on 17/01/2017.
  */
 
-public class GattObjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements GattListener {
+public class GATTObjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements GATTListener {
 
     private static final int CASE_SERVICE = 0;
     private static final int CASE_CHARACTERISTIC = 1;
     private List<Object> gattObjectList = new ArrayList<>();
 
-    public GattObjectAdapter() {
+    public GATTObjectAdapter() {
         hasStableIds();
     }
 

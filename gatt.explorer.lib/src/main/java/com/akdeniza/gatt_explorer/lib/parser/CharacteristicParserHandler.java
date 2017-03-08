@@ -2,7 +2,7 @@ package com.akdeniza.gatt_explorer.lib.parser;
 
 import com.akdeniza.gatt_explorer.lib.model.Characteristic;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Akdeniz on 05/03/2017.
@@ -12,14 +12,17 @@ public class CharacteristicParserHandler {
 
     public static final String FORMAT_STRING = "0x19";
     public static final String FORMAT_16BIT_INTEGER = "0x06";
+    public static final String FORMAT_128BIT_INTEGER = "0x0B";
 
 
     private StringParser stringParser;
     private IntParser intParser;
+    private UUIDParser uuidParser;
 
     public CharacteristicParserHandler() {
         this.stringParser = new StringParser();
         this.intParser = new IntParser();
+        this.uuidParser = new UUIDParser();
     }
 
 
@@ -37,6 +40,8 @@ public class CharacteristicParserHandler {
                             break;
                         case FORMAT_16BIT_INTEGER:
                             characteristic.setValue((intParser.to(characteristic.getValueInByte())));
+                        case FORMAT_128BIT_INTEGER:
+                            characteristic.setValue(uuidParser.to(characteristic.getValueInByte()).toString());
                     }
                 } else {
                     characteristic.setValue("NOT READABLE");

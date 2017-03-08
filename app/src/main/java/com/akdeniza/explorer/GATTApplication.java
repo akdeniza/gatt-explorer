@@ -9,7 +9,7 @@ import com.orhanobut.logger.Logger;
  * Created by Akdeniz on 17/01/2017.
  */
 
-public class GattApplication extends Application {
+public class GATTApplication extends Application {
 
     private static final String LOGGER_TAG = "GATTApplication";
 

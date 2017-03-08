@@ -6,7 +6,7 @@ import java.util.List;
  * Created by Akdeniz on 14/02/2017.
  */
 
-public interface GattListener {
+public interface GATTListener {
 
     void onData(List<Object> gattObjects);
 }

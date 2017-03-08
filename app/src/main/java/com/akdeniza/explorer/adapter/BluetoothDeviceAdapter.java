@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.akdeniza.explorer.activity.GattProfileActivity;
+import com.akdeniza.explorer.activity.GATTProfileActivity;
 import com.akdeniza.explorer.presenter.DeviceListPresenter;
 import com.akdeniza.gatt_explorer.gatt_explorer.R;
 import com.akdeniza.explorer.model.Device;
@@ -85,8 +85,8 @@ public class BluetoothDeviceAdapter extends RecyclerView.Adapter<BluetoothDevice
 
         @Override
         public void onClick(View view) {
-            Intent i = new Intent(view.getContext(), GattProfileActivity.class);
-            i.putExtra(GattProfileActivity.INTENT_DEVICE_KEY, device.getBluetoothDevice());
+            Intent i = new Intent(view.getContext(), GATTProfileActivity.class);
+            i.putExtra(GATTProfileActivity.INTENT_DEVICE_KEY, device.getBluetoothDevice());
             view.getContext().startActivity(i);
         }
 

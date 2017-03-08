@@ -5,6 +5,6 @@
     <dimen name="floating_button_margin_bottom">40dp</dimen>
     <dimen name="device_row_height">60dp</dimen>
     <dimen name="service_row_height">50dp</dimen>
-    <dimen name="characteristic_row_height">50dp</dimen>
+    <dimen name="characteristic_row_height">65dp</dimen>
     <dimen name="characteristic_left_padding">72dp</dimen>
 </resources>

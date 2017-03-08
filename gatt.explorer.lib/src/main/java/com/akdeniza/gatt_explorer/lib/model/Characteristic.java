@@ -24,7 +24,7 @@ public class Characteristic {
     @SerializedName("access")
     private String access;
 
-    private byte[] valueInByte;
+    private byte[] valueInByte  = new byte[8];
 
     private String value;
 

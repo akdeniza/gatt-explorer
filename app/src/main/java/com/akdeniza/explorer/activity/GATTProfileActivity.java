@@ -8,23 +8,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.akdeniza.explorer.adapter.GattObjectAdapter;
+import com.akdeniza.explorer.adapter.GATTObjectAdapter;
 import com.akdeniza.explorer.model.Device;
 import com.akdeniza.explorer.utils.RecyclerViewLine;
 import com.akdeniza.gatt_explorer.gatt_explorer.R;
-import com.akdeniza.gatt_explorer.lib.GattExplorer;
+import com.akdeniza.gatt_explorer.lib.GATTExplorer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GattProfileActivity extends AppCompatActivity {
+public class GATTProfileActivity extends AppCompatActivity {
 
     public static final String INTENT_DEVICE_KEY = "leDevice";
 
     private BluetoothDevice leDevice;
     private BluetoothGatt bluetoothGatt;
-    private GattObjectAdapter adapter;
-    private GattExplorer gattExplorer;
+    private GATTObjectAdapter adapter;
+    private GATTExplorer GATTExplorer;
 
     @BindView(R.id.gattRecyclerView)
     RecyclerView recyclerView;
@@ -42,7 +42,7 @@ public class GattProfileActivity extends AppCompatActivity {
         Device device = new Device(leDevice.getAddress(), leDevice, 0);
 
         //Recyclerview and Adapter
-        adapter = new GattObjectAdapter();
+        adapter = new GATTObjectAdapter();
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -51,8 +51,8 @@ public class GattProfileActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         //Exploring Gatt
-        gattExplorer = new GattExplorer(this);
-        gattExplorer.discoverGatt(leDevice, adapter);
+        GATTExplorer = new GATTExplorer(this);
+        GATTExplorer.discoverGATT(leDevice, adapter);
 
     }
 

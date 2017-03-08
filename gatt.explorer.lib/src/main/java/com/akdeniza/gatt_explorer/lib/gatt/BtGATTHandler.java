@@ -1,5 +1,6 @@
 package com.akdeniza.gatt_explorer.lib.gatt;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -29,32 +30,34 @@ import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
  * Created by Akdeniz on 14/02/2017.
  */
 
-public class BtGattHandler extends BluetoothGattCallback {
+public class BtGATTHandler extends BluetoothGattCallback {
 
     private int counter = 0;
     private List<Object> gattObjects = new ArrayList<>();
     private List<Object> databaseReponse = new ArrayList<>();
-    private GattListener gattListener;
+    private GATTListener GATTListener;
     private List<BluetoothGattCharacteristic> characteristics;
     private BluetoothGatt bluetoothGatt;
     private String serviceAndCharacteristicUiids = "";
     private Context context;
+    private Boolean firstTimeDisconnect;
 
 
     /**
-     * @param gattListener
+     * @param GATTListener
      * @param context
      */
-    public BtGattHandler(GattListener gattListener, Context context) {
-        this.gattListener = gattListener;
-        this.context = context.getApplicationContext();
+    public BtGATTHandler(GATTListener GATTListener, Context context) {
+        this.GATTListener = GATTListener;
+        this.context = context;
+        this.firstTimeDisconnect = true;
     }
 
     /**
      * @param listener
      */
-    public void setGattListener(GattListener listener) {
-        this.gattListener = listener;
+    public void setGATTListener(GATTListener listener) {
+        this.GATTListener = listener;
 
     }
 
@@ -63,13 +66,17 @@ public class BtGattHandler extends BluetoothGattCallback {
         super.onConnectionStateChange(gatt, status, newState);
         this.bluetoothGatt = gatt;
         if (newState == BluetoothProfile.STATE_CONNECTED) {
+            firstTimeDisconnect = false;
             Logger.d("Connected to GATT server");
             Logger.d("Attempting to start discovering services");
 
             gatt.discoverServices();
         } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
             Logger.d("Disonnected from GATT server");
-
+            if (firstTimeDisconnect) {
+                Logger.d("Can't connect to device");
+                ((Activity) (context)).finish();
+            }
         }
     }
 
@@ -227,10 +234,10 @@ public class BtGattHandler extends BluetoothGattCallback {
 
         //If no data from the database was obtainable then pass the raw data
         if (databaseReponse.isEmpty()) {
-            gattListener.onData(fromGattObjectToLibraryModel(gattObjects));
+            GATTListener.onData(fromGattObjectToLibraryModel(gattObjects));
         } else {
             databaseReponse = characteristicParserHandler.parseAllCharacteristics(databaseReponse);
-            gattListener.onData(databaseReponse);
+            GATTListener.onData(databaseReponse);
         }
 
     }

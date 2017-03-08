@@ -23,7 +23,7 @@ import com.akdeniza.explorer.utils.LocationHelper;
 import com.akdeniza.explorer.utils.RecyclerViewLine;
 import com.akdeniza.explorer.adapter.BluetoothDeviceAdapter;
 import com.akdeniza.gatt_explorer.gatt_explorer.R;
-import com.akdeniza.gatt_explorer.lib.GattExplorer;
+import com.akdeniza.gatt_explorer.lib.GATTExplorer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 public class ScannerActivity extends AppCompatActivity implements
         FloatingActionButton.OnClickListener, BluetoothHelper.Listener, LocationHelper.Listener {
 
-    private GattExplorer gattExplorer;
+    private GATTExplorer GATTExplorer;
     private BluetoothHelper bluetoothHelper;
     private LocationHelper locationHelper;
     private boolean scannerOnPlay = false;
@@ -56,7 +56,7 @@ public class ScannerActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_scanner);
         ButterKnife.bind(this);
 
-        gattExplorer = new GattExplorer(this);
+        GATTExplorer = new GATTExplorer(this);
         locationHelper = new LocationHelper(this);
         bluetoothHelper = new BluetoothHelper(this);
         playPauseButton.setOnClickListener(this);
@@ -83,11 +83,11 @@ public class ScannerActivity extends AppCompatActivity implements
         bluetoothHelper.addListener(this);
         locationHelper.addListener(this);
         setEmptyView();
-        gattExplorer.setScanResultListener(deviceListPresenter);
+        GATTExplorer.setScanResultListener(deviceListPresenter);
         deviceListPresenter.onStart(adapter);
         adapter.registerAdapterDataObserver(emptyViewHandler);
         if (isScanningPossible() && scannerOnPlay) {
-            gattExplorer.startScan();
+            GATTExplorer.startScan();
         }
         displayDialogsIfNeeded();
     }
@@ -99,7 +99,7 @@ public class ScannerActivity extends AppCompatActivity implements
         locationHelper.removeListener(this);
         adapter.unregisterAdapterDataObserver(emptyViewHandler);
         if (bluetoothHelper.isBluetoothEnabled()) {
-            gattExplorer.stopScan();
+            GATTExplorer.stopScan();
         }
         deviceListPresenter.onStop();
         dismissDialogs();
@@ -123,7 +123,7 @@ public class ScannerActivity extends AppCompatActivity implements
                     if (isScanningPossible()) {
                         scannerOnPlay = true;
                         playPauseButton.setImageResource(android.R.drawable.ic_media_pause);
-                        gattExplorer.startScan();
+                        GATTExplorer.startScan();
                         deviceListPresenter.setUIUpdateState(true);
                     }
                 } else {
@@ -161,11 +161,11 @@ public class ScannerActivity extends AppCompatActivity implements
     public void onBluetoothStatusChange(boolean isEnabled) {
         setEmptyView();
         if (isEnabled) {
-            gattExplorer.onStart();
+            GATTExplorer.onStart();
             deviceListPresenter.onStart(adapter);
-            gattExplorer.setScanResultListener(deviceListPresenter);
+            GATTExplorer.setScanResultListener(deviceListPresenter);
             if (locationHelper.IsLocationTurnedOn() && locationHelper.IsLocationTurnedOn() && scannerOnPlay) {
-                gattExplorer.startScan();
+                GATTExplorer.startScan();
                 deviceListPresenter.setUIUpdateState(true);
             }
             if (bluetoothDialog != null) {
@@ -173,7 +173,7 @@ public class ScannerActivity extends AppCompatActivity implements
             }
         } else {
             if (scannerOnPlay) {
-                gattExplorer.stopScan();
+                GATTExplorer.stopScan();
                 deviceListPresenter.setUIUpdateState(false);
             }
             deviceListPresenter.removeAllFromList();
@@ -191,11 +191,11 @@ public class ScannerActivity extends AppCompatActivity implements
             }
             if (bluetoothHelper.isBluetoothEnabled() && locationHelper.checkLocationPermission() && scannerOnPlay) {
                 deviceListPresenter.onStart(adapter);
-                gattExplorer.startScan();
+                GATTExplorer.startScan();
                 deviceListPresenter.setUIUpdateState(true);
             }
         } else {
-            gattExplorer.stopScan();
+            GATTExplorer.stopScan();
             deviceListPresenter.setUIUpdateState(false);
             deviceListPresenter.removeAllFromList();
             displayDialogsIfNeeded();

@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.akdeniza.explorer.activity.GattProfileActivity"
+            android:name="com.akdeniza.explorer.activity.GATTProfileActivity"
             android:screenOrientation="portrait">
         </activity>
     </application>

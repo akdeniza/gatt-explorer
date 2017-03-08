@@ -4,8 +4,8 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
 
-import com.akdeniza.gatt_explorer.lib.gatt.BtGattHandler;
-import com.akdeniza.gatt_explorer.lib.gatt.GattListener;
+import com.akdeniza.gatt_explorer.lib.gatt.BtGATTHandler;
+import com.akdeniza.gatt_explorer.lib.gatt.GATTListener;
 import com.akdeniza.gatt_explorer.lib.scanner.ScanListener;
 import com.akdeniza.gatt_explorer.lib.scanner.Scanner;
 import com.akdeniza.gatt_explorer.lib.scanner.ScannerFactory;
@@ -20,17 +20,17 @@ import com.akdeniza.gatt_explorer.lib.scanner.ScannerFactory;
  * @author Akdeniz on 04/01/2017.
  */
 
-public class GattExplorer {
+public class GATTExplorer {
 
     private Scanner scanner;
     private Context context;
 
     /**
-     * Constructor to create an object of GattExplorer
+     * Constructor to create an object of GATTExplorer
      * @param context
      */
-    public GattExplorer(Context context) {
-        this.context = context.getApplicationContext();
+    public GATTExplorer(Context context) {
+        this.context = context;
         this.scanner = ScannerFactory.getScanner();
     }
 
@@ -74,10 +74,10 @@ public class GattExplorer {
      * service and characteristic information.
      * If no file is in the database for the specific device the raw data will be returned
      * @param device that should be discovered
-     * @param gattListener that should receive the service and characteristic information
+     * @param GATTListener that should receive the service and characteristic information
      */
-    public void discoverGatt(BluetoothDevice device, GattListener gattListener) {
-        BtGattHandler bluetoothGattCallback = new BtGattHandler(gattListener, context);
+    public void discoverGATT(BluetoothDevice device, GATTListener GATTListener) {
+        BtGATTHandler bluetoothGattCallback = new BtGATTHandler(GATTListener, context);
         BluetoothGatt bluetoothGatt = device.connectGatt(context, false, bluetoothGattCallback);
     }
 
