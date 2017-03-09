@@ -157,6 +157,10 @@ public class ScannerActivity extends AppCompatActivity implements
                 && bluetoothHelper.isBluetoothEnabled();
     }
 
+    /**
+     * Indicates the change of the bluetooth status change. Will stop or start the bluetooth scanner accordingly
+     * @param isEnabled
+     */
     @Override
     public void onBluetoothStatusChange(boolean isEnabled) {
         setEmptyView();
@@ -180,6 +184,10 @@ public class ScannerActivity extends AppCompatActivity implements
 
     }
 
+    /**
+     * Indicates the change of the location status change. Will stop or start the bluetooth scanner accordingly
+     * @param isEnabled
+     */
     @Override
     public void onLocationStatusChange(boolean isEnabled) {
         setEmptyView();
@@ -200,6 +208,9 @@ public class ScannerActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Sets the emptyView according to the ongoing state
+     */
     private void setEmptyView() {
         if (bluetoothHelper.isBluetoothEnabled()) {
             if (locationHelper.IsLocationTurnedOn()) {
@@ -259,6 +270,10 @@ public class ScannerActivity extends AppCompatActivity implements
 
     }
 
+    /**
+     * Check if any scan permission or if bluetooth or the lcoation is disabled and requests these
+     * with the dialogs of these
+     */
     private void displayDialogsIfNeeded() {
         if (bluetoothHelper.isBluetoothEnabled()) {
             if (locationHelper.IsLocationTurnedOn()) {
@@ -276,7 +291,9 @@ public class ScannerActivity extends AppCompatActivity implements
         }
     }
 
-
+    /**
+     * dismisses all the dialogs on this activity
+     */
     public void dismissDialogs() {
         if (bluetoothDialog != null) {
             bluetoothDialog.dismiss();

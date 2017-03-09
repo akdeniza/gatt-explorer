@@ -5,7 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by Akdeniz on 02/03/2017.
+ * The GitHub reponse POJO. Uses GSON to parse the JSON
+ * @author Akdeniz on 02/03/2017.
  */
 
 public class GitHubReponse {

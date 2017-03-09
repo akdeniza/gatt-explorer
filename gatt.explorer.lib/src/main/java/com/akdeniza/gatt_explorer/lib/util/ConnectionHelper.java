@@ -5,11 +5,17 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 /**
- * Created by Akdeniz on 02/03/2017.
+ *  Connection helper checking if the device has a connection to the internet
+ *  @author Akdeniz on 02/03/2017.
  */
 
 public class ConnectionHelper {
 
+    /**
+     * Checks if the devices is connected to the internet
+     * @param context
+     * @return boolean
+     */
     public boolean isConnectedToInternet(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 

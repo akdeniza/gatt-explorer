@@ -12,7 +12,8 @@ import java.util.List;
 import static android.bluetooth.BluetoothAdapter.ACTION_STATE_CHANGED;
 
 /**
- * Created by Akdeniz on 05/01/2017.
+ * Bluetooth helper class to check the bluetooth status
+ * @author Akdeniz on 05/01/2017.
  */
 
 public class BluetoothHelper {
@@ -30,7 +31,10 @@ public class BluetoothHelper {
         listeners = new ArrayList<>();
     }
 
-
+    /**
+     * To check if bluetooth is enabled
+     * @return if bluetooth is enabled
+     */
     public boolean isBluetoothEnabled() {
         return adapter.isEnabled();
     }
@@ -41,7 +45,10 @@ public class BluetoothHelper {
         }
     }
 
-
+    /**
+     * Add listener to get informed of the change of the bluetooth state
+     * @param listener
+     */
     public void addListener(Listener listener) {
         context.registerReceiver(broadcastReceiver, STATE_CHANGED);
 
@@ -55,7 +62,10 @@ public class BluetoothHelper {
         }
     }
 
-
+    /**
+     * Remove the given listener from the listener list
+     * @param listener
+     */
     public void removeListener(Listener listener) {
         listeners.remove(listener);
 
@@ -64,6 +74,9 @@ public class BluetoothHelper {
         }
     }
 
+    /**
+     * Checks the bluetooth current state and notifies all the listener
+     */
     private void checkBluetoothStateAndNotifyListeners() {
         boolean state = isBluetoothEnabled();
         if (state != bluetoothEnabled) {
@@ -82,6 +95,9 @@ public class BluetoothHelper {
         }
     };
 
+    /**
+     * Listener interface to get notified on the change of the bluetooth state
+     */
     public interface Listener {
         void onBluetoothStatusChange(boolean isEnabled);
     }

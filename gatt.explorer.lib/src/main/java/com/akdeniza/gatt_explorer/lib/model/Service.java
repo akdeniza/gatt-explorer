@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by Akdeniz on 02/03/2017.
+ *  GATT Service
+ *  @author Akdeniz on 02/03/2017.
  */
 
 public class Service {
@@ -24,18 +25,33 @@ public class Service {
     @SerializedName("characteristics")
     private List<Characteristic> characteristics;
 
+    /**
+     * Constructor to create an service object
+     * @param uuid of the service
+     * @param name of the service
+     * @param characteristics of the service
+     */
     public Service(UUID uuid, String name, List<Characteristic> characteristics) {
         this.uuuid = uuid;
         this.name = name;
         this.characteristics = characteristics;
     }
 
+    /**
+     * Constructor to create an service object
+     * @param service to be used
+     */
     public Service(BluetoothGattService service) {
         this.uuuid = service.getUuid();
         this.name = null;
         this.characteristics = toCharacteristic(service.getCharacteristics());
     }
 
+    /**
+     * Parses all the characteristics from the class BluetoothGattCharacteristic into  com.akdeniza.gatt_explorer.lib.model.characteristic
+     * @param bluetoothGattCharacteristics list to be parsed
+     * @return
+     */
     public List<Characteristic> toCharacteristic(List<BluetoothGattCharacteristic> bluetoothGattCharacteristics) {
         List<Characteristic> characteristics = new ArrayList<>();
         for (BluetoothGattCharacteristic chara : bluetoothGattCharacteristics) {
@@ -44,14 +60,26 @@ public class Service {
         return characteristics;
     }
 
+    /**
+     * Getter for the UUID
+     * @return the UUID
+     */
     public UUID getUuuid() {
         return uuuid;
     }
 
+    /**
+     * Getter for the Name
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Getter for the characteristics
+     * @return the characteristics
+     */
     public List<Characteristic> getCharacteristics() {
         return characteristics;
     }

@@ -12,7 +12,7 @@ import android.util.Log;
 import static android.bluetooth.le.ScanSettings.SCAN_MODE_BALANCED;
 
 /**
- * Bluetooth scanner class for devices above API 21
+ * Bluetooth scanner class for devices above Android API level 21
  * @author Akdeniz on 05/01/2017.
  */
 
@@ -26,6 +26,9 @@ public class ScannerV21 implements Scanner {
     private ScanListener listener;
     private ScanSettings scanSettings;
 
+    /**
+     * Constructor of the ScannerV21 class. Scansettings are SCAN_MODE_BALANCED
+     */
     public ScannerV21() {
         this.adapter = BluetoothAdapter.getDefaultAdapter();
         this.bluetoothLeScanner = adapter.getBluetoothLeScanner();

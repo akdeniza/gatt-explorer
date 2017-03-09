@@ -7,7 +7,8 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 /**
- * Created by Akdeniz on 02/03/2017.
+ *  The GitHubInterface to receive the GATT file using the hash
+ *  @author Akdeniz on 02/03/2017.
  */
 
 public interface GitHubInterface {

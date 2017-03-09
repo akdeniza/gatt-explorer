@@ -16,7 +16,9 @@ public class ScannerV0 implements Scanner, BluetoothAdapter.LeScanCallback {
     private static final String EXCEPTION_LOG_TAG = "ScannerV0";
     private ScanListener listener;
 
-
+    /**
+     * Constructor of the ScannerV0 class
+     */
     public ScannerV0() {
         this.adapter = BluetoothAdapter.getDefaultAdapter();
     }

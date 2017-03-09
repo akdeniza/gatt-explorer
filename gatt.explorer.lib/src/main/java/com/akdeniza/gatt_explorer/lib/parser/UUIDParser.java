@@ -4,11 +4,17 @@ import java.nio.ByteBuffer;
 import java.util.UUID;
 
 /**
- * Created by Akdeniz on 08/03/2017.
+ *  UUIDParser to parse an 16-Byte array to an UUID
+ *  @author Akdeniz on 08/03/2017.
  */
 
 public class UUIDParser {
 
+    /**
+     * Parses the given byte array to an UUID
+     * @param bytes to be parsed. Must be 16 byte
+     * @return the parsed UUID
+     */
     public UUID to(byte[] bytes) {
 
         ByteBuffer bb = ByteBuffer.wrap(bytes);

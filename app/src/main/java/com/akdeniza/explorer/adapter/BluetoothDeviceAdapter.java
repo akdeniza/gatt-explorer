@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Akdeniz on 09/01/2017.
+ * Handles the bluetooth devicelist for the recyclerView
+ * @author Akdeniz on  09/01/2017.
  */
 
 public class BluetoothDeviceAdapter extends RecyclerView.Adapter<BluetoothDeviceAdapter.DeviceHolder>

@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Akdeniz on 17/01/2017.
+ * Handles the GATT data for the RecyclerView.
+ * @author Akdeniz on 17/01/2017.
  */
 
 public class GATTObjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements GATTListener {
@@ -30,6 +31,10 @@ public class GATTObjectAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         hasStableIds();
     }
 
+    /**
+     * Uses the given data to update the list
+     * @param list
+     */
     public void setGattAdapterObjectList(final List<Object> list) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override

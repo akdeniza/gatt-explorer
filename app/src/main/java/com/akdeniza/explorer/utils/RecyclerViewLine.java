@@ -9,7 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
- * Created by Akdeniz on 10/01/2017.
+ * RecyclerViewLine
+ * @author Akdeniz on 10/01/2017.
  */
 
 public class RecyclerViewLine extends RecyclerView.ItemDecoration {

@@ -12,7 +12,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by Akdeniz on 09/01/2017.
+ * Handles the incoming scan results and parses these information
+ *  @author Akdeniz on 09/01/2017.
  */
 
 public class DeviceListPresenter implements ScanListener {
@@ -37,7 +38,6 @@ public class DeviceListPresenter implements ScanListener {
         this.listener = null;
     }
 
-
     /**
      * Calls a runnable to run if not already the code on the main thread.
      * Reason for this is on Android 4 the bluetooth scanner runs sometimes on non-main threads
@@ -48,6 +48,13 @@ public class DeviceListPresenter implements ScanListener {
         new MainRunnable(device, rssi, scanRecord);
     }
 
+    /**
+     * Using the BluetoothAdapter with a device until the android API 21 can results in the change of the
+     * thread to a non-ui thread. These method makes sure its on the ui-thread and if not changes back to it
+     * @param device
+     * @param rssi
+     * @param scanRecord
+     */
     private void onDataMainThread(BluetoothDevice device, int rssi, byte[] scanRecord) {
         String address = device.getAddress();
         int pos = checkIfDeviceIsAlreadyInList(address);
@@ -147,6 +154,9 @@ public class DeviceListPresenter implements ScanListener {
         }
     };
 
+    /**
+     * Interface to get notified about the changed
+     */
     public interface DataChangedListener {
 
         void onDevicesChanged(List<Device> devices);

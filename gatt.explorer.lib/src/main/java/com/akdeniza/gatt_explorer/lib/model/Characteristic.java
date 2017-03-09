@@ -7,7 +7,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.UUID;
 
 /**
- * Created by Akdeniz on 02/03/2017.
+ * GATT characteristic
+ * @author Akdeniz on 02/03/2017.
  */
 
 public class Characteristic {
@@ -28,6 +29,10 @@ public class Characteristic {
 
     private String value;
 
+    /**
+     * Constructor
+     * @param characteristic
+     */
     public Characteristic(BluetoothGattCharacteristic characteristic) {
         this.uuuid = characteristic.getUuid();
         this.name = null;

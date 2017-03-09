@@ -27,7 +27,8 @@ import retrofit2.Response;
 import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
 
 /**
- * Created by Akdeniz on 14/02/2017.
+ * Handles the callbacks for BLE-devices and requests the json from the database
+ *  @author Akdeniz on 14/02/2017.
  */
 
 public class BtGATTHandler extends BluetoothGattCallback {
@@ -44,7 +45,8 @@ public class BtGATTHandler extends BluetoothGattCallback {
 
 
     /**
-     * @param GATTListener
+     * Constructor
+     * @param GATTListener that should receive the result
      * @param context
      */
     public BtGATTHandler(GATTListener GATTListener, Context context) {
@@ -53,13 +55,6 @@ public class BtGATTHandler extends BluetoothGattCallback {
         this.firstTimeDisconnect = true;
     }
 
-    /**
-     * @param listener
-     */
-    public void setGATTListener(GATTListener listener) {
-        this.GATTListener = listener;
-
-    }
 
     @Override
     public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -86,9 +81,9 @@ public class BtGATTHandler extends BluetoothGattCallback {
         super.onServicesDiscovered(gatt, status);
 
         if (status == GATT_SUCCESS) {
-
             List<BluetoothGattService> services = gatt.getServices();
 
+            //Loops through the services, add these and the characteritics to the gattObjects
             for (BluetoothGattService service : services) {
                 gattObjects.add(service);
                 characteristics = service.getCharacteristics();
@@ -101,6 +96,7 @@ public class BtGATTHandler extends BluetoothGattCallback {
                 Logger.d("GATT Service: " + service.getUuid());
             }
 
+            //Creates the hash of from the UUIDs and requests from the database a file with the hash as name
             Logger.d("Hash: " + serviceAndCharacteristicUiids.hashCode() + " from: " + serviceAndCharacteristicUiids);
             requestGATTFromDatabase("" + serviceAndCharacteristicUiids.hashCode());
         } else {
@@ -226,6 +222,9 @@ public class BtGATTHandler extends BluetoothGattCallback {
         }
     }
 
+    /**
+     * Parse all the charactiertics if the data from the database was obtained successfully and exists
+     */
     private void parseCharacteristicIfNeededInfoIsAvailable() {
 
         CharacteristicParserHandler characteristicParserHandler = new CharacteristicParserHandler();

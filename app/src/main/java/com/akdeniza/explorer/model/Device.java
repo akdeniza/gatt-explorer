@@ -10,7 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Created by Akdeniz on 09/01/2017.
+ * Device POJO class
+ * @author Akdeniz on 09/01/2017.
  */
 
 public class Device implements Comparable {
@@ -27,7 +28,6 @@ public class Device implements Comparable {
         this.rssi = rssi;
         this.lastUpdate = System.currentTimeMillis();
     }
-
 
 
     @Override

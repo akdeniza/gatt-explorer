@@ -5,7 +5,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
- * Created by Akdeniz on 01/03/2017.
+ *  The GitHubClient to request data of the gatt explorer database
+ *  @author Akdeniz on 01/03/2017.
  */
 
 public class GitHubClient {

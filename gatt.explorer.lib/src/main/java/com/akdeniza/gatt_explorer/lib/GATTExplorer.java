@@ -37,7 +37,7 @@ public class GATTExplorer {
 
     /**
      * Starts a Bluetooth LE scan. Scan results are returned to ScanListener
-     * @param listener
+     * @param listener that should receive  the scan results
      */
     public void startScan(ScanListener listener) {
         scanner = ScannerFactory.getScanner();

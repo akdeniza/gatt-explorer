@@ -31,7 +31,8 @@ import static android.provider.Settings.Secure.LOCATION_MODE;
 import static android.provider.Settings.Secure.LOCATION_MODE_OFF;
 
 /**
- * Created by Akdeniz on 05/01/2017.
+ * LocationHelper to check permissions and help with the requesting that
+ * @author Akdeniz on 05/01/2017.
  */
 
 public class LocationHelper {
@@ -50,6 +51,10 @@ public class LocationHelper {
         listeners = new ArrayList<>(LOCATION_NEEDED ? 3 : 0);
     }
 
+    /**
+     * Check if location permission is given
+     * @return boolean if the permisison is given
+     */
     public boolean checkLocationPermission() {
         if (LOCATION_NEEDED) {
             return (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
@@ -57,10 +62,18 @@ public class LocationHelper {
         return true;
     }
 
+    /**
+     * Checks if the location permission is needed
+     * @return if its needed
+     */
     public boolean isLocationNeeded() {
         return LOCATION_NEEDED;
     }
 
+    /**
+     * Checks if the location is turned on
+     * @return if the location is turned on
+     */
     public boolean IsLocationTurnedOn() {
         if (LOCATION_NEEDED) {
             try {
@@ -73,7 +86,11 @@ public class LocationHelper {
         return true;
     }
 
-
+    /**
+     * Requests the location permission and shows an explanation of the need
+     * @param view
+     * @param activity
+     */
     public void requestLocationPermission(View view, Activity activity) {
         if (!checkLocationPermission()) {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
@@ -86,6 +103,10 @@ public class LocationHelper {
         }
     }
 
+    /**
+     * Shows the explanation dialog for the need of the location permission
+     * @param activity
+     */
     private void showPermissionExplanationDialog(final Activity activity) {
         new AlertDialog.Builder(context)
                 .setCancelable(true)
@@ -106,6 +127,10 @@ public class LocationHelper {
                 .show();
     }
 
+    /**
+     * Requesting the location permission
+     * @param activity
+     */
     private void showPermissionDialog(Activity activity) {
         if (!checkLocationPermission()) {
             ActivityCompat.requestPermissions(
@@ -115,6 +140,10 @@ public class LocationHelper {
         }
     }
 
+    /**
+     * Opens the location enable settings activity
+     * @param activity
+     */
     public void openLocationEnableSetting(Activity activity) {
         try {
             activity.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
@@ -123,6 +152,10 @@ public class LocationHelper {
         }
     }
 
+    /**
+     * Opens the location permission settings activity
+     * @param activity
+     */
     public void openLocationPermissionSetting(Activity activity) {
         try {
             final Intent i = new Intent();
@@ -139,6 +172,11 @@ public class LocationHelper {
 
     }
 
+    /**
+     * Displays the permission denied snackbar
+     * @param view
+     * @param activity
+     */
     public void showPermissionDeniedSnackbar(View view, final Activity activity) {
         Snackbar snackbar = Snackbar
                 .make(view, R.string.location_snackbar_message, Snackbar.LENGTH_LONG)
@@ -151,6 +189,10 @@ public class LocationHelper {
         snackbar.show();
     }
 
+    /**
+     * Adds a listener to get informed when the location status changes
+     * @param listener
+     */
     public void addListener(Listener listener) {
         if (!LOCATION_NEEDED) {
             return;
@@ -166,6 +208,10 @@ public class LocationHelper {
         }
     }
 
+    /**
+     * removed the given listener
+     * @param listener
+     */
     public void removeListener(Listener listener) {
         if (!LOCATION_NEEDED) {
             return;
@@ -179,6 +225,9 @@ public class LocationHelper {
 
     }
 
+    /**
+     * Checks the location state and notifies all the listener
+     */
     private void checkLocationStateAndNotifyListeners() {
         boolean value = IsLocationTurnedOn();
         if (value != isLocationEnabled) {
@@ -196,7 +245,9 @@ public class LocationHelper {
             checkLocationStateAndNotifyListeners();
         }
     };
-
+    /**
+     * Listener interface to get notified on the change of the location state
+     */
     public interface Listener {
         void onLocationStatusChange(boolean isEnabled);
     }

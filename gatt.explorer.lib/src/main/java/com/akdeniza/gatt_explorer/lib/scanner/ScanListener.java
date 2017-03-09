@@ -4,13 +4,14 @@ import android.bluetooth.BluetoothDevice;
 
 /**
  * ScanListener interface for receiving scan results
- * Created by Akdeniz on 05/01/2017.
+ * @author Akdeniz on 05/01/2017.
  */
+
 
 public interface ScanListener {
 
     /**
-     *
+     * Results of the scan
      * @param device that was found
      * @param rssi value of the found device
      * @param scanRecord advertisment record

@@ -5,7 +5,8 @@ import com.akdeniza.gatt_explorer.lib.model.Characteristic;
 import java.util.*;
 
 /**
- * Created by Akdeniz on 05/03/2017.
+ * The Characteristic parser Handler class to parse characteristics according to the format
+ * @author Akdeniz on 05/03/2017.
  */
 
 public class CharacteristicParserHandler {
@@ -25,7 +26,11 @@ public class CharacteristicParserHandler {
         this.uuidParser = new UUIDParser();
     }
 
-
+    /**
+     * Parses all the given com.akdeniza.gatt_explorer.lib.model.Characteristic with the given format
+     * @param list with the characteristics that should be parsed
+     * @return parsed list
+     */
     public List<Object> parseAllCharacteristics(List<Object> list) {
         List<Object> newList = list;
 

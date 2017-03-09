@@ -10,7 +10,8 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 /**
- * Created by Akdeniz on 11/01/2017.
+ * Handles the empty view in case for some reason the recyclerview isn't filled
+ *  @author Akdeniz on 11/01/2017.
  */
 
 public class EmptyViewHandler extends RecyclerView.AdapterDataObserver {
@@ -30,6 +31,14 @@ public class EmptyViewHandler extends RecyclerView.AdapterDataObserver {
         updateEmptyView();
     }
 
+    /**
+     * Sets the emptyview state.
+     * 0 No beacon found
+     * 1 for bluetooth is disabled
+     * 2 for location is disabled
+     * 3 for scanner is paused
+     * @param state to be set
+     */
     public void setEmptyViewState(int state) {
 
         switch (state) {
@@ -49,6 +58,9 @@ public class EmptyViewHandler extends RecyclerView.AdapterDataObserver {
         }
     }
 
+    /**
+     * Updates the emptyView and remove this in case there is data in the recyclerView
+     */
     public void updateEmptyView() {
         if (recyler.getAdapter() != null) {
             boolean showEmptyView = recyler.getAdapter().getItemCount() == 0;

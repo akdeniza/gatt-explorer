@@ -13,6 +13,9 @@ public class GATTApplication extends Application {
 
     private static final String LOGGER_TAG = "GATTApplication";
 
+    /**
+     * Only add logging in debug mode
+     */
     @Override
     public void onCreate() {
         super.onCreate();
