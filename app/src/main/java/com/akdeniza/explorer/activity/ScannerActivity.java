@@ -84,11 +84,10 @@ public class ScannerActivity extends AppCompatActivity implements
         bluetoothHelper.addListener(this);
         locationHelper.addListener(this);
         setEmptyView();
-        GATTExplorer.setScanResultListener(deviceListPresenter);
         deviceListPresenter.onStart(adapter);
         adapter.registerAdapterDataObserver(emptyViewHandler);
         if (isScanningPossible() && scannerOnPlay) {
-            GATTExplorer.startScan();
+            GATTExplorer.startScan(deviceListPresenter);
         }
         displayDialogsIfNeeded();
     }
@@ -124,7 +123,7 @@ public class ScannerActivity extends AppCompatActivity implements
                     if (isScanningPossible()) {
                         scannerOnPlay = true;
                         playPauseButton.setImageResource(android.R.drawable.ic_media_pause);
-                        GATTExplorer.startScan();
+                        GATTExplorer.startScan(deviceListPresenter);
                         deviceListPresenter.setUIUpdateState(true);
                     }
                 } else {
@@ -162,11 +161,9 @@ public class ScannerActivity extends AppCompatActivity implements
     public void onBluetoothStatusChange(boolean isEnabled) {
         setEmptyView();
         if (isEnabled) {
-            GATTExplorer.onStart();
             deviceListPresenter.onStart(adapter);
-            GATTExplorer.setScanResultListener(deviceListPresenter);
             if (locationHelper.IsLocationTurnedOn() && locationHelper.IsLocationTurnedOn() && scannerOnPlay) {
-                GATTExplorer.startScan();
+                GATTExplorer.startScan(deviceListPresenter);
                 deviceListPresenter.setUIUpdateState(true);
             }
             if (bluetoothDialog != null) {
@@ -192,7 +189,7 @@ public class ScannerActivity extends AppCompatActivity implements
             }
             if (bluetoothHelper.isBluetoothEnabled() && locationHelper.checkLocationPermission() && scannerOnPlay) {
                 deviceListPresenter.onStart(adapter);
-                GATTExplorer.startScan();
+                GATTExplorer.startScan(deviceListPresenter);
                 deviceListPresenter.setUIUpdateState(true);
             }
         } else {

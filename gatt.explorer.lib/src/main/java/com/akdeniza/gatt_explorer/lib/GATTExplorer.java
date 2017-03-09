@@ -13,7 +13,7 @@ import com.akdeniza.gatt_explorer.lib.scanner.ScannerFactory;
 
 /**
  * Exploring and scanning for Bluetooth Low energy devices.
- *
+ * <p>
  * Uses the database at www.github/akdeniza/gatt-explorer-database/data to parse
  * service and characteristic information.
  *
@@ -27,27 +27,21 @@ public class GATTExplorer {
 
     /**
      * Constructor to create an object of GATTExplorer
+     *
      * @param context
      */
     public GATTExplorer(Context context) {
         this.context = context;
-        this.scanner = ScannerFactory.getScanner();
     }
 
-
-    public void onStart() {
-        scanner = ScannerFactory.getScanner();
-
-    }
-
-    public void onStop() {
-
-    }
 
     /**
      * Starts a Bluetooth LE scan. Scan results are returned to ScanListener
+     * @param listener
      */
-    public void startScan() {
+    public void startScan(ScanListener listener) {
+        scanner = ScannerFactory.getScanner();
+        scanner.setScanListener(listener);
         scanner.startScan();
     }
 
@@ -56,24 +50,17 @@ public class GATTExplorer {
      */
     public void stopScan() {
         scanner.stopScan();
+        scanner = null;
     }
 
-    /**
-     * Sets the ScanListener that receives the scan results
-     * @param listener receives scan results
-     */
-    public void setScanResultListener(ScanListener listener) {
-        scanner.setScanListener(listener);
-    }
-
-    //region "explorer part"
 
     /**
      * Discoveres the Generic Attribute Profile of the given Bluetooth Devices.
      * Uses the database at www.github/akdeniza/gatt-explorer-database/data to parse
      * service and characteristic information.
      * If no file is in the database for the specific device the raw data will be returned
-     * @param device that should be discovered
+     *
+     * @param device       that should be discovered
      * @param GATTListener that should receive the service and characteristic information
      */
     public void discoverGATT(BluetoothDevice device, GATTListener GATTListener) {
@@ -81,24 +68,4 @@ public class GATTExplorer {
         BluetoothGatt bluetoothGatt = device.connectGatt(context, false, bluetoothGattCallback);
     }
 
-    public void connectToDevice() {
-
-    }
-
-    public void disconnectFromDevice() {
-
-    }
-
-    public void checkIfJsonIsAvailable() {
-
-    }
-
-    public void localBackup() {
-
-    }
-
-    public void discoverDevice() {
-
-    }
-    //endregion
 }
