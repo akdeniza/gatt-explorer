@@ -11,14 +11,11 @@ public class UUIDParser {
 
     public UUID to(byte[] bytes) {
 
-
         ByteBuffer bb = ByteBuffer.wrap(bytes);
-        long high = bb.getLong();
-        //long low = bb.getLong();
-        UUID uuid = new UUID(high, 0);
+        long mostSig = bb.getLong();
+        long leastSig = bb.getLong();
 
-        return uuid;
-
+        return new UUID(mostSig, leastSig);
     }
 
 

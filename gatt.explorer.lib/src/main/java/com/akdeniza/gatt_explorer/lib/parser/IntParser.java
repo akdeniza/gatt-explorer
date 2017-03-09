@@ -1,7 +1,5 @@
 package com.akdeniza.gatt_explorer.lib.parser;
 
-import java.math.BigInteger;
-
 /**
  * Created by Akdeniz on 05/03/2017.
  */
@@ -9,6 +7,13 @@ import java.math.BigInteger;
 public class IntParser {
 
     public String to(byte[] bytes) {
-        return "" + new BigInteger(bytes).intValue();
+
+        long value = 0;
+        for (int i = 0; i < bytes.length; i++) {
+            value = (value << 8) + (bytes[i] & 0xff);
+        }
+        return "" + value;
+
     }
+
 }

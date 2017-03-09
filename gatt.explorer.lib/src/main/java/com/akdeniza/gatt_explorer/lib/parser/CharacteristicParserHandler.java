@@ -40,8 +40,10 @@ public class CharacteristicParserHandler {
                             break;
                         case FORMAT_16BIT_INTEGER:
                             characteristic.setValue((intParser.to(characteristic.getValueInByte())));
+                            break;
                         case FORMAT_128BIT_INTEGER:
-                            characteristic.setValue(uuidParser.to(characteristic.getValueInByte()).toString());
+                           characteristic.setValue(uuidParser.to(characteristic.getValueInByte()).toString());
+                            break;
                     }
                 } else {
                     characteristic.setValue("NOT READABLE");
