@@ -1,10 +1,10 @@
-# gatt-explorer
-Android library for exploring and parsing the GATT-Profile of bluetooth low energy devices.
+# GATT Explorer
+Android library for exploring and parsing the GATT-Profile of bluetooth low energy devices using the gatt-information from the database.
 
-# data
+#Data
 To enter data go to the website htttp://akdeniza.com and use the formular to enter GATT data about BLE devices. The data will be saved on the following repo: github.com/akdeniza/gatt-explorer-database/
 
-# usage
+#Usage
 
 Add it in your root build.gradle at the end of repositories:
     allprojects {
