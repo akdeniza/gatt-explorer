@@ -8,7 +8,7 @@ To enter data go to the website htttp://akdeniza.com and use the formular to ent
 
 Add it in your root build.gradle at the end of repositories:
     allprojects {
-		repositories {
+    		repositories {
 			...
 			maven { url 'https://jitpack.io' }
 		}
