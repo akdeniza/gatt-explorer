@@ -196,7 +196,7 @@ public class BtGATTHandler extends BluetoothGattCallback {
             });
 
         } else {
-            //TODO: Toast: No connection, showing raw data
+            requestCharateristicsValues();
         }
     }
 

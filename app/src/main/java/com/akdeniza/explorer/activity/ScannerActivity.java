@@ -55,6 +55,7 @@ public class ScannerActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
         ButterKnife.bind(this);
+        this.setTitle(getResources().getString(R.string.device_list));
 
         GATTExplorer = new GATTExplorer(this);
         locationHelper = new LocationHelper(this);

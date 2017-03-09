@@ -8,6 +8,7 @@
 
         android:id="@+id/deviceImageView"
         android:layout_width="0dp"
+        android:src="@drawable/bluetooth"
         android:layout_height="match_parent"
         android:layout_weight="1"/>
 

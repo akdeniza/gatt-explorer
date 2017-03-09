@@ -36,6 +36,8 @@ public class GATTProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gatt_profile);
         ButterKnife.bind(this);
 
+        this.setTitle(getResources().getString(R.string.gatt_profile));
+
         //Get Device from Intent
         Intent i = getIntent();
         leDevice = i.getParcelableExtra(INTENT_DEVICE_KEY);
