@@ -7,10 +7,9 @@ To enter data go to the website htttp://akdeniza.com and use the formular to ent
 #Usage
 
 Add it in your root build.gradle at the end of repositories:
-```
-	
 
-    allprojects {
+```
+ allprojects {
     		repositories {
 			...
 			maven { url 'https://jitpack.io' }
@@ -18,16 +17,18 @@ Add it in your root build.gradle at the end of repositories:
 	}
 ```
  Add the dependency  
-  ```
+ 
+```
   dependencies {
 	        compile 'com.github.akdeniza:gatt-explorer:1.0'
 	}
 ```
     
  Create an an object of the GATTExplorer
-   ```
+ 
+```
     GATTExplorer gattExplorer = new GATTExplorer(content)
-    ```
+```
     
  Implement the two Interfaces ScanListener and GATTListener for data output.
     
