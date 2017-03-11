@@ -49,8 +49,11 @@ public class GATTExplorer {
      * Stops ongoing Bluetooth LE scan.
      */
     public void stopScan() {
-        scanner.stopScan();
-        scanner = null;
+        if(scanner != null){
+            scanner.stopScan();
+            scanner = null;
+        }
+
     }
 
 
