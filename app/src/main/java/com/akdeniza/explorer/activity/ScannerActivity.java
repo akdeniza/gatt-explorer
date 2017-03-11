@@ -146,7 +146,12 @@ public class ScannerActivity extends AppCompatActivity implements
                 }
             }
 
-            if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+            if (grantResults.length > 0 && (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+                GATTExplorer.startScan(deviceListPresenter);
+                deviceListPresenter.setUIUpdateState(true);
+                scannerOnPlay = true;
+                playPauseButton.setImageResource(android.R.drawable.ic_media_pause);
+            }else{
                 locationHelper.showPermissionDeniedSnackbar(findViewById(R.id.activity_scanner), this);
             }
         }
