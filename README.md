@@ -24,7 +24,7 @@ Add it in your root build.gradle at the end of repositories:
 	}
 ```
     
- Create an an object of the GATTExplorer
+ Create an object of the GATTExplorer
  
 ```
     GATTExplorer gattExplorer = new GATTExplorer(content)
